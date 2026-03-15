@@ -7,6 +7,7 @@ import { allowSignup } from "./auth/allow-signup";
 import { detectProxy } from "./proxy/detect";
 import { validateConfig } from "./config/validate";
 import { applyConfig } from "./config/apply";
+import { listHistory, getById } from "./config/history";
 import { render } from "./ssr/render";
 import { shell } from "./ssr/html";
 import type { ProxyConfig } from "./proxy/types";
@@ -59,12 +60,22 @@ const app = new Elysia()
   .get("/api/allow-signup", async () => ({ allowSignup: await allowSignup() }))
   .get("/api/proxy/status", async () => detectProxy())
   .post("/api/config/validate", async ({ body }) => {
-    const config = body as ProxyConfig;
+    const config = (typeof body === "string" ? JSON.parse(body) : body) as ProxyConfig;
+    if (!config?.sites) return { valid: false, error: "Invalid config: sites required" };
     return validateConfig(config);
   })
   .post("/api/config/apply", async ({ body }) => {
-    const config = body as ProxyConfig;
+    const config = (typeof body === "string" ? JSON.parse(body) : body) as ProxyConfig;
+    if (!config?.sites) return { ok: false, error: "Invalid config: sites required" };
     return applyConfig(config);
+  })
+  .get("/api/config/history", () => listHistory())
+  .post("/api/config/rollback", async ({ body }) => {
+    const id = typeof body === "object" && body && "id" in body ? (body as { id: string }).id : null;
+    if (!id) return { ok: false, error: "id required" };
+    const entry = await getById(id);
+    if (!entry) return { ok: false, error: "Config not found" };
+    return applyConfig(entry.payload);
   })
   .all("/api/auth/*", async ({ request }) => auth.handler(request))
   .get("/login", () => new Response(loginHtml, { headers: { "Content-Type": "text/html" } }))

@@ -46,3 +46,11 @@ CREATE TABLE IF NOT EXISTS "verification" (
   "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
   "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS config_history (
+  "id" TEXT PRIMARY KEY,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+  "payload" JSONB NOT NULL,
+  "provider" TEXT NOT NULL,
+  "comment" TEXT
+);
