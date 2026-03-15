@@ -8,6 +8,8 @@ import { detectProxy } from "./proxy/detect";
 import { validateConfig } from "./config/validate";
 import { applyConfig } from "./config/apply";
 import { listHistory, getById, getLatest } from "./config/history";
+import * as caddy from "./proxy/caddy";
+import * as traefik from "./proxy/traefik";
 import { render } from "./ssr/render";
 import { shell } from "./ssr/html";
 import type { ProxyConfig } from "./proxy/types";
@@ -78,6 +80,14 @@ const app = new Elysia()
     return applyConfig(config);
   })
   .get("/api/certificates", () => [])
+  .get("/api/config/preview", async () => {
+    const { provider } = await detectProxy();
+    const config = await getLatest();
+    const payload = config ?? { sites: [] };
+    if (provider === "caddy") return { provider, raw: caddy.configToCaddyfile(payload) };
+    if (provider === "traefik") return { provider, raw: traefik.configToYaml(payload) };
+    return { provider: null, raw: "" };
+  })
   .get("/api/config/current", async () => {
     const config = await getLatest();
     return config ?? { sites: [] };
