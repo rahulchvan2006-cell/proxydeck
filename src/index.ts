@@ -1,9 +1,14 @@
 import { Elysia } from "elysia";
+import { readFileSync, existsSync } from "fs";
+import { join } from "path";
 import { auth } from "./auth/config";
 import { getSession, isProtectedPath } from "./auth/middleware";
 import { allowSignup } from "./auth/allow-signup";
+import { render } from "./ssr/render";
+import { shell } from "./ssr/html";
 
 const PORT = process.env.PORT ?? "3000";
+const ASSETS_DIR = join(process.cwd(), "dist", "assets");
 
 async function authGuard({ request }: { request: Request }) {
   const pathname = new URL(request.url).pathname;
@@ -51,7 +56,21 @@ const app = new Elysia()
   .all("/api/auth/*", async ({ request }) => auth.handler(request))
   .get("/login", () => new Response(loginHtml, { headers: { "Content-Type": "text/html" } }))
   .get("/signup", () => new Response(signupHtml, { headers: { "Content-Type": "text/html" } }))
-  .get("/", () => "Proxydeck")
+  .get("/assets/*", ({ request }) => {
+    const pathname = new URL(request.url).pathname;
+    const sub = pathname.slice("/assets/".length) || "entry.js";
+    if (sub.includes("..")) return new Response("Forbidden", { status: 403 });
+    const filePath = join(ASSETS_DIR, sub);
+    if (!existsSync(filePath)) return new Response("Not Found", { status: 404 });
+    const body = readFileSync(filePath);
+    const contentType = sub.endsWith(".js") ? "application/javascript" : sub.endsWith(".css") ? "text/css" : "application/octet-stream";
+    return new Response(body, { headers: { "Content-Type": contentType } });
+  })
+  .get("/", () => {
+    const ssrContent = render("/");
+    const html = shell(ssrContent);
+    return new Response(html, { headers: { "Content-Type": "text/html" } });
+  })
   .listen(PORT);
 
 console.log(`Server at http://localhost:${PORT}`);
