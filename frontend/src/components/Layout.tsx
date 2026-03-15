@@ -22,7 +22,9 @@ export function Layout() {
     <>
       <nav className="app-nav" aria-label="Main">
         <div className="app-nav-brand">
-          <NavLink to="/" className="app-nav-brand-link">Proxydeck</NavLink>
+          <NavLink to="/" className="app-nav-brand-link">
+            <img src="/logo.svg" alt="Proxydeck" className="app-nav-logo" />
+          </NavLink>
         </div>
         <ul className="app-nav-list">
           {navItems.map(({ to, end, label }) => (

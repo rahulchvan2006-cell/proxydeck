@@ -93,10 +93,18 @@ a:hover {
   flex-shrink: 0;
 }
 .app-nav-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   font-weight: 600;
   font-size: var(--text-lg);
   color: var(--color-text) !important;
   text-decoration: none !important;
+}
+.app-nav-logo {
+  height: 2.75rem;
+  width: auto;
+  display: block;
 }
 .app-nav-brand-link:hover {
   color: var(--color-primary) !important;
