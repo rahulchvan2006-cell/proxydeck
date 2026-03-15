@@ -1,4 +1,3 @@
-import { auth } from "./config";
 import { pool } from "../../db/pool";
 
 const PUBLIC_PATHS = ["/login", "/signup", "/api/auth", "/api/allow-signup"];
@@ -16,7 +15,7 @@ function getCookie(headers: Headers, name: string): string | null {
   return match ? decodeURIComponent(match[1].trim()) : null;
 }
 
-/** Resolve session from DB using cookie token (fallback when better-auth getSession fails). */
+/** Resolve session from DB using cookie token. */
 async function getSessionFromDb(cookieValue: string): Promise<{ user: unknown } | null> {
   const tokenPart = cookieValue.split(".")[0];
   const r = await pool.query<{
@@ -46,18 +45,6 @@ export async function getSession(requestOrHeaders: Request | Headers) {
   const headers = requestOrHeaders instanceof Request ? requestOrHeaders.headers : requestOrHeaders;
   const cookieValue = getCookie(headers, SESSION_COOKIE_NAME);
   if (!cookieValue) return null;
-
-  const baseUrl = new URL(requestOrHeaders instanceof Request ? requestOrHeaders.url : "http://localhost").origin;
-  const sessionUrl = `${baseUrl}/api/auth/get-session`;
-  const sessionRequest = new Request(sessionUrl, { method: "GET", headers });
-  const res = await auth.handler(sessionRequest);
-  if (res.ok) {
-    const text = await res.text();
-    const data = text ? (() => { try { return JSON.parse(text); } catch { return null; } })() : null;
-    const session = data?.data ?? null;
-    if (session) return session;
-  }
-
   return getSessionFromDb(cookieValue);
 }
 
