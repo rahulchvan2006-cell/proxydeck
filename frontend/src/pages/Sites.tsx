@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
+import { SquaresFour, Table } from "@phosphor-icons/react";
 import type { ProxyConfig, Site, Route, Upstream } from "../types/proxy";
 
 const emptyConfig: ProxyConfig = { sites: [] };
 
+type ViewMode = "cards" | "table";
+
 export function Sites() {
   const [config, setConfig] = useState<ProxyConfig>(emptyConfig);
   const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<ViewMode>("cards");
   const [validateResult, setValidateResult] = useState<{ valid: boolean; error?: string } | null>(null);
   const [applyResult, setApplyResult] = useState<{ ok: boolean; error?: string } | null>(null);
 
@@ -81,6 +85,27 @@ export function Sites() {
       <header className="page-header">
         <h1 className="page-title">Sites</h1>
         <p className="page-desc">Configure hostnames and reverse proxy routes.</p>
+        <div className="row gap-2" style={{ marginTop: "var(--space-3)", alignItems: "center" }}>
+          <span className="section-title" style={{ marginBottom: 0, fontSize: "var(--text-sm)" }}>View:</span>
+          <button
+            type="button"
+            className={viewMode === "cards" ? "btn btn-primary btn-sm" : "btn btn-outline btn-sm"}
+            onClick={() => setViewMode("cards")}
+            title="Cards"
+            aria-label="Cards view"
+          >
+            <SquaresFour size={20} weight="duotone" />
+          </button>
+          <button
+            type="button"
+            className={viewMode === "table" ? "btn btn-primary btn-sm" : "btn btn-outline btn-sm"}
+            onClick={() => setViewMode("table")}
+            title="Table"
+            aria-label="Table view"
+          >
+            <Table size={20} weight="duotone" />
+          </button>
+        </div>
       </header>
       <article className="card">
         {validateResult && (
@@ -100,14 +125,20 @@ export function Sites() {
               Add site
             </button>
           </div>
+        ) : viewMode === "table" ? (
+          <SitesTable
+            sites={config.sites}
+            onSwitchToCards={() => setViewMode("cards")}
+            onRemove={removeSite}
+          />
         ) : (
-        <ul className="unstyled-list stack">
-          {config.sites.map((site, i) => (
-            <li key={i}>
-              <SiteEditor site={site} onChange={(s) => updateSite(i, s)} onRemove={() => removeSite(i)} />
-            </li>
-          ))}
-        </ul>
+          <ul className="unstyled-list stack">
+            {config.sites.map((site, i) => (
+              <li key={i}>
+                <SiteEditor site={site} onChange={(s) => updateSite(i, s)} onRemove={() => removeSite(i)} />
+              </li>
+            ))}
+          </ul>
         )}
         <footer className="row gap-2" style={{ marginTop: "var(--space-6)" }}>
           <button type="button" className="btn btn-outline" onClick={addSite}>Add site</button>
@@ -116,6 +147,52 @@ export function Sites() {
         </footer>
       </article>
     </>
+  );
+}
+
+function SitesTable({
+  sites,
+  onSwitchToCards,
+  onRemove,
+}: {
+  sites: Site[];
+  onSwitchToCards: () => void;
+  onRemove: (index: number) => void;
+}) {
+  return (
+    <div style={{ overflowX: "auto" }}>
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <thead>
+          <tr style={{ borderBottom: "1px solid var(--color-border)" }}>
+            <th style={{ textAlign: "left", padding: "var(--space-3)", fontSize: "var(--text-sm)", fontWeight: 600 }}>Hostnames</th>
+            <th style={{ textAlign: "left", padding: "var(--space-3)", fontSize: "var(--text-sm)", fontWeight: 600 }}>Routes</th>
+            <th style={{ textAlign: "left", padding: "var(--space-3)", fontSize: "var(--text-sm)", fontWeight: 600 }}>Upstreams</th>
+            <th style={{ textAlign: "right", padding: "var(--space-3)", fontSize: "var(--text-sm)", fontWeight: 600 }}>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sites.map((site, i) => (
+            <tr key={i} style={{ borderBottom: "1px solid var(--color-border)" }}>
+              <td style={{ padding: "var(--space-3)", fontSize: "var(--text-sm)", verticalAlign: "top" }}>
+                {site.hostnames.filter(Boolean).join(", ") || "—"}
+              </td>
+              <td style={{ padding: "var(--space-3)", fontSize: "var(--text-sm)", verticalAlign: "top" }}>
+                {site.routes.map((r) => r.match).filter(Boolean).join(", ") || "—"}
+              </td>
+              <td style={{ padding: "var(--space-3)", fontSize: "var(--text-sm)", verticalAlign: "top" }}>
+                {site.routes.map((r) => r.upstreams.map((u) => u.address).join(", ")).filter(Boolean).join(" | ") || "—"}
+              </td>
+              <td style={{ padding: "var(--space-3)", textAlign: "right", verticalAlign: "top" }}>
+                <span className="row gap-2" style={{ justifyContent: "flex-end" }}>
+                  <button type="button" className="btn btn-outline btn-sm" onClick={onSwitchToCards}>Edit</button>
+                  <button type="button" className="btn btn-danger btn-sm" onClick={() => onRemove(i)}>Remove</button>
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
