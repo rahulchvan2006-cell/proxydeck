@@ -6,9 +6,17 @@ interface Preview {
   raw: string;
 }
 
+interface HistoryEntry {
+  id: string;
+  createdAt: string;
+  provider: string;
+  comment: string | null;
+}
+
 export function Config() {
   const [preview, setPreview] = useState<Preview>({ provider: null, raw: "" });
   const [config, setConfig] = useState<ProxyConfig | null>(null);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [validateResult, setValidateResult] = useState<{ valid: boolean; error?: string } | null>(null);
   const [applyResult, setApplyResult] = useState<{ ok: boolean; error?: string } | null>(null);
@@ -18,10 +26,12 @@ export function Config() {
     Promise.all([
       fetch("/api/config/preview").then((r) => r.json()),
       fetch("/api/config/current").then((r) => r.json()),
+      fetch("/api/config/history").then((r) => r.json()),
     ])
-      .then(([p, c]) => {
+      .then(([p, c, h]) => {
         setPreview(p);
         setConfig(c?.sites ? c : { sites: [] });
+        setHistory(Array.isArray(h) ? h : []);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -58,6 +68,21 @@ export function Config() {
       .catch((e) => setApplyResult({ ok: false, error: e.message }));
   };
 
+  const rollback = (id: string) => {
+    setApplyResult(null);
+    fetch("/api/config/rollback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    })
+      .then((r) => r.json())
+      .then((r) => {
+        setApplyResult(r);
+        if (r.ok) load();
+      })
+      .catch((e) => setApplyResult({ ok: false, error: e.message }));
+  };
+
   if (loading) return <p>Loading…</p>;
 
   return (
@@ -82,6 +107,22 @@ export function Config() {
         <div role="alert" data-variant={applyResult.ok ? "success" : "error"}>
           {applyResult.ok ? "Config applied." : applyResult.error}
         </div>
+      )}
+      {history.length > 0 && (
+        <section style={{ marginTop: "1rem" }}>
+          <h3>History</h3>
+          <ul className="unstyled">
+            {history.map((entry) => (
+              <li key={entry.id} className="hstack" style={{ gap: "0.5rem", marginBottom: "0.25rem" }}>
+                <span>{new Date(entry.createdAt).toLocaleString()}</span>
+                <span className="badge">{entry.provider}</span>
+                <button type="button" className="outline small" onClick={() => rollback(entry.id)}>
+                  Rollback
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
       <footer className="hstack" style={{ gap: "0.5rem" }}>
         <button type="button" className="outline" onClick={validate} disabled={!config?.sites?.length}>
