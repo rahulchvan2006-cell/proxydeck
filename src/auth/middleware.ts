@@ -8,10 +8,10 @@ function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
 }
 
-export async function getSession(headers: Headers) {
-  const res = await auth.api.getSession({
-    headers,
-  });
+export async function getSession(requestOrHeaders: Request | Headers) {
+  const res = await auth.api.getSession(
+    requestOrHeaders instanceof Request ? { request: requestOrHeaders } : { headers: requestOrHeaders }
+  );
   return res?.data ?? null;
 }
 

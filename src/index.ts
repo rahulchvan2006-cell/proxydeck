@@ -23,7 +23,7 @@ async function apiAuthGuard({ request }: { request: Request }) {
   if (!pathname.startsWith("/api")) return;
   const isPublic = PUBLIC_API_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
   if (isPublic) return;
-  const session = await getSession(request.headers);
+  const session = await getSession(request);
   if (session) return;
   return new Response(JSON.stringify({ error: "Unauthorized" }), {
     status: 401,
