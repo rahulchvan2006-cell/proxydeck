@@ -14,4 +14,17 @@ export const auth = betterAuth({
     enabled: true,
   },
   plugins: [username()],
+  databaseHooks: {
+    user: {
+      create: {
+        before: async () => {
+          const r = await pool.query<{ count: string }>('SELECT COUNT(*)::text FROM "user"');
+          const count = parseInt(r.rows[0]?.count ?? "0", 10);
+          if (count >= 1) {
+            throw new Error("Signup disabled: only one user allowed.");
+          }
+        },
+      },
+    },
+  },
 });
