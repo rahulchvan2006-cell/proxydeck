@@ -4,6 +4,7 @@ import { join } from "path";
 import { auth } from "./auth/config";
 import { getSession, isProtectedPath } from "./auth/middleware";
 import { allowSignup } from "./auth/allow-signup";
+import { detectProxy } from "./proxy/detect";
 import { render } from "./ssr/render";
 import { shell } from "./ssr/html";
 
@@ -53,6 +54,7 @@ const signupHtml = `
 const app = new Elysia()
   .onBeforeHandle(authGuard)
   .get("/api/allow-signup", async () => ({ allowSignup: await allowSignup() }))
+  .get("/api/proxy/status", async () => detectProxy())
   .all("/api/auth/*", async ({ request }) => auth.handler(request))
   .get("/login", () => new Response(loginHtml, { headers: { "Content-Type": "text/html" } }))
   .get("/signup", () => new Response(signupHtml, { headers: { "Content-Type": "text/html" } }))
