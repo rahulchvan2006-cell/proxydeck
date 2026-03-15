@@ -9,12 +9,13 @@ Bun, PostgreSQL. Caddy or Traefik optional (auto-detected).
 ## Quick start
 
 ```bash
-bun install
-createdb proxydeck
-export DATABASE_URL="postgres://user:pass@localhost:5432/proxydeck"
-export BETTER_AUTH_SECRET="$(openssl rand -base64 32)"
-export BETTER_AUTH_URL="http://localhost:3000"
+cp .env.sample .env
+# Edit .env and set BETTER_AUTH_SECRET (e.g. openssl rand -base64 32)
 
+# Optional: run Postgres via Docker for local dev
+docker compose -f docker-compose-dev.yml up -d
+
+bun install
 bun run db:migrate
 bun run build:client
 bun run start
