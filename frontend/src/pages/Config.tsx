@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { ProxyConfig } from "../types/proxy";
+import { Link } from "react-router-dom";
 
 interface Preview {
   provider: string | null;
@@ -15,22 +15,18 @@ interface HistoryEntry {
 
 export function Config() {
   const [preview, setPreview] = useState<Preview>({ provider: null, raw: "" });
-  const [config, setConfig] = useState<ProxyConfig | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [validateResult, setValidateResult] = useState<{ valid: boolean; error?: string } | null>(null);
-  const [applyResult, setApplyResult] = useState<{ ok: boolean; error?: string } | null>(null);
+  const [rollbackResult, setRollbackResult] = useState<{ ok: boolean; error?: string } | null>(null);
 
   const load = () => {
     setLoading(true);
     Promise.all([
       fetch("/api/config/preview", { credentials: "include" }).then((r) => r.json()),
-      fetch("/api/config/current", { credentials: "include" }).then((r) => r.json()),
       fetch("/api/config/history", { credentials: "include" }).then((r) => r.json()),
     ])
-      .then(([p, c, h]) => {
+      .then(([p, h]) => {
         setPreview(p);
-        setConfig(c?.sites ? c : { sites: [] });
         setHistory(Array.isArray(h) ? h : []);
       })
       .catch(() => {})
@@ -39,39 +35,8 @@ export function Config() {
 
   useEffect(load, []);
 
-  const validate = () => {
-    if (!config) return;
-    setValidateResult(null);
-    fetch("/api/config/validate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(config),
-    })
-      .then((r) => r.json())
-      .then(setValidateResult)
-      .catch((e) => setValidateResult({ valid: false, error: e.message }));
-  };
-
-  const apply = () => {
-    if (!config) return;
-    setApplyResult(null);
-    fetch("/api/config/apply", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(config),
-    })
-      .then((r) => r.json())
-      .then((r) => {
-        setApplyResult(r);
-        if (r.ok) load();
-      })
-      .catch((e) => setApplyResult({ ok: false, error: e.message }));
-  };
-
   const rollback = (id: string) => {
-    setApplyResult(null);
+    setRollbackResult(null);
     fetch("/api/config/rollback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -80,10 +45,10 @@ export function Config() {
     })
       .then((r) => r.json())
       .then((r) => {
-        setApplyResult(r);
+        setRollbackResult(r);
         if (r.ok) load();
       })
-      .catch((e) => setApplyResult({ ok: false, error: e.message }));
+      .catch((e) => setRollbackResult({ ok: false, error: e.message }));
   };
 
   if (loading) {
@@ -91,7 +56,7 @@ export function Config() {
       <>
         <header className="page-header">
           <h1 className="page-title">Config</h1>
-          <p className="page-desc">Preview, validate, and apply proxy configuration.</p>
+          <p className="page-desc">Preview generated config and rollback history.</p>
         </header>
         <div className="card">
           <p className="empty-state">Loading…</p>
@@ -104,7 +69,14 @@ export function Config() {
     <>
       <header className="page-header">
         <h1 className="page-title">Config</h1>
-        <p className="page-desc">Preview, validate, and apply proxy configuration.</p>
+        <p className="page-desc">
+          Preview of the config that will be applied. Edit and apply from <Link to="/sites">Sites</Link>.
+        </p>
+        <p className="row gap-2" style={{ marginTop: "var(--space-2)", alignItems: "center" }}>
+          <Link to="/sites" className="btn btn-outline btn-sm">
+            Edit & apply on Sites
+          </Link>
+        </p>
       </header>
       <article className="card">
         {preview.provider ? (
@@ -120,24 +92,11 @@ export function Config() {
         ) : (
           <p className="status-muted">No proxy detected. Config preview unavailable.</p>
         )}
-        {validateResult && (
-          <div className={validateResult.valid ? "alert alert-success" : "alert alert-error"} role="status" style={{ marginTop: "var(--space-4)" }}>
-            {validateResult.valid ? "Config is valid." : validateResult.error}
+        {rollbackResult && (
+          <div className={rollbackResult.ok ? "alert alert-success" : "alert alert-error"} role="status" style={{ marginTop: "var(--space-4)" }}>
+            {rollbackResult.ok ? "Rolled back successfully." : rollbackResult.error}
           </div>
         )}
-        {applyResult && (
-          <div className={applyResult.ok ? "alert alert-success" : "alert alert-error"} role="status">
-            {applyResult.ok ? "Config applied successfully." : applyResult.error}
-          </div>
-        )}
-        <footer className="row gap-2" style={{ marginTop: "var(--space-6)" }}>
-          <button type="button" className="btn btn-outline" onClick={validate} disabled={!config?.sites?.length}>
-            Validate
-          </button>
-          <button type="button" className="btn btn-primary" onClick={apply} disabled={!config?.sites?.length}>
-            Apply config
-          </button>
-        </footer>
       </article>
       {history.length > 0 && (
         <section className="card" style={{ marginTop: "var(--space-6)" }} aria-labelledby="config-history-heading">

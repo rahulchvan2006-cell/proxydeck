@@ -6,6 +6,7 @@ const emptyConfig: ProxyConfig = { sites: [] };
 export function Sites() {
   const [config, setConfig] = useState<ProxyConfig>(emptyConfig);
   const [loading, setLoading] = useState(true);
+  const [validateResult, setValidateResult] = useState<{ valid: boolean; error?: string } | null>(null);
   const [applyResult, setApplyResult] = useState<{ ok: boolean; error?: string } | null>(null);
 
   useEffect(() => {
@@ -34,8 +35,22 @@ export function Sites() {
     setConfig({ sites: next });
   };
 
+  const validate = () => {
+    setValidateResult(null);
+    fetch("/api/config/validate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(config),
+    })
+      .then((r) => r.json())
+      .then(setValidateResult)
+      .catch((e) => setValidateResult({ valid: false, error: e.message }));
+  };
+
   const apply = () => {
     setApplyResult(null);
+    setValidateResult(null);
     fetch("/api/config/apply", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -68,6 +83,11 @@ export function Sites() {
         <p className="page-desc">Configure hostnames and reverse proxy routes.</p>
       </header>
       <article className="card">
+        {validateResult && (
+          <div className={validateResult.valid ? "alert alert-success" : "alert alert-error"} role="status">
+            {validateResult.valid ? "Config is valid." : validateResult.error}
+          </div>
+        )}
         {applyResult && (
           <div className={applyResult.ok ? "alert alert-success" : "alert alert-error"} role="status">
             {applyResult.ok ? "Config applied successfully." : applyResult.error}
@@ -91,7 +111,8 @@ export function Sites() {
         )}
         <footer className="row gap-2" style={{ marginTop: "var(--space-6)" }}>
           <button type="button" className="btn btn-outline" onClick={addSite}>Add site</button>
-          <button type="button" className="btn btn-primary" onClick={apply}>Apply config</button>
+          <button type="button" className="btn btn-outline" onClick={validate} disabled={!config.sites.length}>Validate</button>
+          <button type="button" className="btn btn-primary" onClick={apply} disabled={!config.sites.length}>Apply config</button>
         </footer>
       </article>
     </>
