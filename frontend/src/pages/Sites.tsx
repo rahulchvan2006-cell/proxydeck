@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SquaresFour, Table } from "@phosphor-icons/react";
+import { PencilSimple, SquaresFour, Table, Trash } from "@phosphor-icons/react";
 import type { ProxyConfig, Site, Route, Upstream } from "../types/proxy";
 
 const emptyConfig: ProxyConfig = { sites: [] };
@@ -184,8 +184,12 @@ function SitesTable({
               </td>
               <td style={{ padding: "var(--space-3)", textAlign: "right", verticalAlign: "top" }}>
                 <span className="row gap-2" style={{ justifyContent: "flex-end" }}>
-                  <button type="button" className="btn btn-outline btn-sm" onClick={onSwitchToCards}>Edit</button>
-                  <button type="button" className="btn btn-danger btn-sm" onClick={() => onRemove(i)}>Remove</button>
+                  <button type="button" className="btn btn-outline btn-sm" onClick={onSwitchToCards} title="Edit" aria-label="Edit site">
+                    <PencilSimple size={18} weight="duotone" />
+                  </button>
+                  <button type="button" className="btn btn-danger btn-sm" onClick={() => onRemove(i)} title="Remove" aria-label="Remove site">
+                    <Trash size={18} weight="duotone" />
+                  </button>
                 </span>
               </td>
             </tr>
@@ -223,7 +227,9 @@ function SiteEditor({
             }}
           />
         </div>
-        <button type="button" className="btn btn-danger btn-sm" onClick={onRemove}>Remove site</button>
+        <button type="button" className="btn btn-danger btn-sm" onClick={onRemove} title="Remove site" aria-label="Remove site">
+          <Trash size={18} weight="duotone" />
+        </button>
       </header>
       <div className="stack" style={{ marginTop: "var(--space-4)" }}>
         <h3 className="section-title">Routes</h3>
