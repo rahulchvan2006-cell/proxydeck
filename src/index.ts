@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 import { auth } from "./auth/config";
-import { getSession, isProtectedPath } from "./auth/middleware";
+import { getSession } from "./auth/middleware";
 import { allowSignup } from "./auth/allow-signup";
 import { detectProxy } from "./proxy/detect";
 import { validateConfig } from "./config/validate";
@@ -10,64 +10,48 @@ import { applyConfig } from "./config/apply";
 import { listHistory, getById, getLatest } from "./config/history";
 import * as caddy from "./proxy/caddy";
 import * as traefik from "./proxy/traefik";
-import { render } from "./ssr/render";
-import { shell } from "./ssr/html";
 import type { ProxyConfig } from "./proxy/types";
 import { getLogs } from "./api/logs";
 
 const PORT = process.env.PORT ?? "3000";
-const ASSETS_DIR = join(process.cwd(), "dist", "assets");
+const FRONTEND_DIR = join(process.cwd(), "frontend", "dist");
 
-async function authGuard({ request }: { request: Request }) {
+const PUBLIC_API_PATHS = ["/api/auth", "/api/allow-signup"];
+
+async function apiAuthGuard({ request }: { request: Request }) {
   const pathname = new URL(request.url).pathname;
-  if (!isProtectedPath(pathname)) return;
+  if (!pathname.startsWith("/api")) return;
+  const isPublic = PUBLIC_API_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
+  if (isPublic) return;
   const session = await getSession(request.headers);
   if (session) return;
-  const allow = await allowSignup();
-  return new Response(null, {
-    status: 302,
-    headers: { Location: allow ? "/signup" : "/login" },
+  return new Response(JSON.stringify({ error: "Unauthorized" }), {
+    status: 401,
+    headers: { "Content-Type": "application/json" },
   });
 }
 
-const loginHtml = `
-<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>Login</title></head>
-<body>
-  <h1>Login</h1>
-  <form action="/api/auth/sign-in/username" method="POST">
-    <label>Username <input name="username" required></label>
-    <label>Password <input name="password" type="password" required></label>
-    <button type="submit">Sign in</button>
-  </form>
-</body></html>
-`;
-
-function dashboardPage(pathname: string) {
-  return () => {
-    const ssrContent = render(pathname);
-    const html = shell(ssrContent);
-    return new Response(html, { headers: { "Content-Type": "text/html" } });
+function serveStatic(pathname: string): Response | null {
+  if (pathname.includes("..")) return null;
+  const path = pathname === "/" ? "/index.html" : pathname;
+  const filePath = join(FRONTEND_DIR, path.replace(/^\//, ""));
+  if (!existsSync(filePath)) return null;
+  const body = readFileSync(filePath);
+  const ext = path.split(".").pop() ?? "";
+  const types: Record<string, string> = {
+    html: "text/html",
+    js: "application/javascript",
+    css: "text/css",
+    json: "application/json",
+    ico: "image/x-icon",
+    svg: "image/svg+xml",
   };
+  const contentType = types[ext] ?? "application/octet-stream";
+  return new Response(body, { headers: { "Content-Type": contentType } });
 }
 
-const signupHtml = `
-<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>Sign up</title></head>
-<body>
-  <h1>Sign up</h1>
-  <form action="/api/auth/sign-up/email" method="POST">
-    <label>Name <input name="name" required></label>
-    <label>Email <input name="email" type="email" required></label>
-    <label>Username <input name="username" required></label>
-    <label>Password <input name="password" type="password" required></label>
-    <button type="submit">Create account</button>
-  </form>
-</body></html>
-`;
-
 const app = new Elysia()
-  .onBeforeHandle(authGuard)
+  .onBeforeHandle(apiAuthGuard)
   .get("/api/allow-signup", async () => ({ allowSignup: await allowSignup() }))
   .get("/api/proxy/status", async () => detectProxy())
   .post("/api/config/validate", async ({ body }) => {
@@ -103,23 +87,14 @@ const app = new Elysia()
     return applyConfig(entry.payload);
   })
   .all("/api/auth/*", async ({ request }) => auth.handler(request))
-  .get("/login", () => new Response(loginHtml, { headers: { "Content-Type": "text/html" } }))
-  .get("/signup", () => new Response(signupHtml, { headers: { "Content-Type": "text/html" } }))
-  .get("/assets/*", ({ request }) => {
+  .get("/*", ({ request }) => {
     const pathname = new URL(request.url).pathname;
-    const sub = pathname.slice("/assets/".length) || "entry.js";
-    if (sub.includes("..")) return new Response("Forbidden", { status: 403 });
-    const filePath = join(ASSETS_DIR, sub);
-    if (!existsSync(filePath)) return new Response("Not Found", { status: 404 });
-    const body = readFileSync(filePath);
-    const contentType = sub.endsWith(".js") ? "application/javascript" : sub.endsWith(".css") ? "text/css" : "application/octet-stream";
-    return new Response(body, { headers: { "Content-Type": contentType } });
+    if (pathname.startsWith("/api")) return;
+    const res = serveStatic(pathname);
+    if (res) return res;
+    const indexRes = serveStatic("/index.html");
+    return indexRes ?? new Response("Not Found", { status: 404 });
   })
-  .get("/", dashboardPage("/"))
-  .get("/sites", dashboardPage("/sites"))
-  .get("/config", dashboardPage("/config"))
-  .get("/certificates", dashboardPage("/certificates"))
-  .get("/logs", dashboardPage("/logs"))
   .listen(PORT);
 
 console.log(`Server at http://localhost:${PORT}`);
