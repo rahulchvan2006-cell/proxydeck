@@ -53,7 +53,14 @@ function serveStatic(pathname: string): Response | null {
 const app = new Elysia()
   .onBeforeHandle(apiAuthGuard)
   .get("/api/allow-signup", async () => ({ allowSignup: await allowSignup() }))
-  .get("/api/proxy/status", async () => detectProxy())
+  .get("/api/proxy/status", async () => {
+    try {
+      return await detectProxy();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Detection failed";
+      return { provider: null, message: msg };
+    }
+  })
   .post("/api/config/validate", async ({ body }) => {
     const config = (typeof body === "string" ? JSON.parse(body) : body) as ProxyConfig;
     if (!config?.sites) return { valid: false, error: "Invalid config: sites required" };

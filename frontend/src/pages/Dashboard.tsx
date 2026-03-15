@@ -11,7 +11,14 @@ export function Dashboard() {
 
   useEffect(() => {
     fetch("/api/proxy/status", { credentials: "include" })
-      .then((r) => r.json())
+      .then(async (r) => {
+        const text = await r.text();
+        const data = (() => { try { return JSON.parse(text); } catch { return null; } })();
+        if (!r.ok) {
+          return { provider: null, message: data?.error ?? data?.message ?? `Request failed (${r.status})` };
+        }
+        return data ?? { provider: null, message: "Invalid response." };
+      })
       .then(setStatus)
       .catch(() => setStatus({ provider: null, message: "Could not reach server." }));
   }, []);

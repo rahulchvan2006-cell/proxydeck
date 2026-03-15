@@ -9,9 +9,8 @@ function isPublicPath(pathname: string): boolean {
 }
 
 export async function getSession(requestOrHeaders: Request | Headers) {
-  const res = await auth.api.getSession(
-    requestOrHeaders instanceof Request ? { request: requestOrHeaders } : { headers: requestOrHeaders }
-  );
+  const headers = requestOrHeaders instanceof Request ? requestOrHeaders.headers : requestOrHeaders;
+  const res = await auth.api.getSession({ headers });
   return res?.data ?? null;
 }
 
