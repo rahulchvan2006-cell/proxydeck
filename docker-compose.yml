@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    profiles: ["db"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: proxydeck
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: proxydeck
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U proxydeck"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file: .env
+    environment:
+      # Use DATABASE_URL from .env if set (external DB). Else default to bundled postgres (use --profile db).
+      DATABASE_URL: ${DATABASE_URL:-postgres://proxydeck:${POSTGRES_PASSWORD}@postgres:5432/proxydeck}
+      PORT: 3000
+
+volumes:
+  postgres_data: {}
