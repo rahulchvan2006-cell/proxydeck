@@ -21,11 +21,10 @@ export function Layout() {
   return (
     <>
       <nav data-topnav aria-label="Main" className="hstack justify-between w-100">
+        <NavLink to="/" className="hstack gap-2" style={{ textDecoration: "none", color: "inherit" }}>
+          <img src="/logo.svg" alt="" style={{ height: "2rem", width: "auto", display: "block" }} />
+        </NavLink>
         <div className="hstack gap-2">
-          <NavLink to="/" className="hstack gap-2" style={{ textDecoration: "none", color: "inherit" }}>
-            <img src="/logo.svg" alt="" style={{ height: "2rem", width: "auto", display: "block" }} />
-            <span style={{ fontWeight: 600, fontSize: "var(--text-4)" }}>Proxydeck</span>
-          </NavLink>
           <span className="hstack gap-1">
             {navItems.map(({ to, end, label }) => (
               <NavLink
@@ -42,12 +41,12 @@ export function Layout() {
               </NavLink>
             ))}
           </span>
+          <form onSubmit={handleLogout}>
+            <button type="submit" className="outline small">
+              Log out
+            </button>
+          </form>
         </div>
-        <form onSubmit={handleLogout}>
-          <button type="submit" className="outline small">
-            Log out
-          </button>
-        </form>
       </nav>
       <main style={{ flex: 1, padding: "var(--space-6)", maxWidth: "56rem", margin: "0 auto", width: "100%" }}>
         <Outlet />
