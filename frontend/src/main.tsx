@@ -1,4 +1,5 @@
 import "@knadh/oat/oat.min.css";
+import "./styles/proxydeck-theme.css";
 import "@knadh/oat/oat.min.js";
 import React from "react";
 import ReactDOM from "react-dom/client";

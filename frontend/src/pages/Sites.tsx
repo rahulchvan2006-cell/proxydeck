@@ -1,77 +1,28 @@
-import { useEffect, useState } from "react";
 import { PencilSimple, SquaresFour, Table, Trash } from "@phosphor-icons/react";
-import type { ProxyConfig, Site, Route, Upstream } from "../types/proxy";
-
-const emptyConfig: ProxyConfig = { sites: [] };
-
-type ViewMode = "cards" | "table";
+import type { Site, Route, Upstream } from "../types/proxy";
+import { useSites } from "./hooks/useSites";
 
 export function Sites() {
-  const [config, setConfig] = useState<ProxyConfig>(emptyConfig);
-  const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<ViewMode>("cards");
-  const [validateResult, setValidateResult] = useState<{ valid: boolean; error?: string } | null>(null);
-  const [applyResult, setApplyResult] = useState<{ ok: boolean; error?: string } | null>(null);
-
-  useEffect(() => {
-    fetch("/api/config/current", { credentials: "include" })
-      .then((r) => r.json())
-      .then((data) => setConfig(data?.sites ? data : emptyConfig))
-      .catch(() => setConfig(emptyConfig))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const addSite = () => {
-    const newSite: Site = {
-      hostnames: [""],
-      routes: [{ match: "/", matchType: "path", upstreams: [{ address: "localhost:8080" }] }],
-    };
-    setConfig({ sites: [...config.sites, newSite] });
-  };
-
-  const removeSite = (index: number) => {
-    setConfig({ sites: config.sites.filter((_, i) => i !== index) });
-  };
-
-  const updateSite = (index: number, site: Site) => {
-    const next = [...config.sites];
-    next[index] = site;
-    setConfig({ sites: next });
-  };
-
-  const validate = () => {
-    setValidateResult(null);
-    fetch("/api/config/validate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(config),
-    })
-      .then((r) => r.json())
-      .then(setValidateResult)
-      .catch((e) => setValidateResult({ valid: false, error: e.message }));
-  };
-
-  const apply = () => {
-    setApplyResult(null);
-    setValidateResult(null);
-    fetch("/api/config/apply", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(config),
-    })
-      .then((r) => r.json())
-      .then(setApplyResult)
-      .catch((e) => setApplyResult({ ok: false, error: e.message }));
-  };
+  const {
+    config,
+    loading,
+    viewMode,
+    setViewMode,
+    validateResult,
+    applyResult,
+    addSite,
+    removeSite,
+    updateSite,
+    validate,
+    apply,
+  } = useSites();
 
   if (loading) {
     return (
       <>
-        <header className="mb-6">
+        <header className="pd-page-header">
           <h1>Sites</h1>
-          <p className="text-light">Configure hostnames and reverse proxy routes.</p>
+          <p className="text-light">Proxy : configure hostnames and routes for Caddy or Traefik.</p>
         </header>
         <div className="card p-4">
           <p className="text-light align-center p-4">Loading…</p>
@@ -82,9 +33,9 @@ export function Sites() {
 
   return (
     <>
-      <header className="mb-6">
+      <header className="pd-page-header">
         <h1>Sites</h1>
-        <p className="text-light">Configure hostnames and reverse proxy routes.</p>
+        <p className="text-light">Proxy : configure hostnames and routes for Caddy or Traefik.</p>
         <div className="hstack gap-2 mt-4">
           <span style={{ fontSize: "var(--text-7)" }}>View:</span>
           <button
@@ -132,15 +83,15 @@ export function Sites() {
             onRemove={removeSite}
           />
         ) : (
-          <ul className="unstyled vstack" style={{ padding: 0, margin: 0, gap: 0 }}>
+          <ul className="pd-site-list">
             {config.sites.map((site, i) => (
-              <li key={i} style={{ listStyle: "none", borderBottom: "1px solid var(--border)", paddingBlockEnd: "var(--space-6)", marginBlockEnd: "var(--space-6)" }}>
+              <li key={i}>
                 <SiteEditor site={site} onChange={(s) => updateSite(i, s)} onRemove={() => removeSite(i)} />
               </li>
             ))}
           </ul>
         )}
-        <footer className="hstack gap-2 mt-6" style={{ paddingBlockStart: "var(--space-4)", borderTop: "1px solid var(--border)" }}>
+        <footer className="hstack gap-2 pd-footer-actions">
           <button type="button" className="outline" onClick={addSite}>Add site</button>
           <button type="button" className="outline" onClick={validate} disabled={!config.sites.length}>Validate</button>
           <button type="button" onClick={apply} disabled={!config.sites.length}>Apply config</button>
@@ -160,7 +111,7 @@ function SitesTable({
   onRemove: (index: number) => void;
 }) {
   return (
-    <div className="table" style={{ overflowX: "auto" }}>
+    <div className="table pd-table-gridless" style={{ overflowX: "auto" }}>
       <table>
         <thead>
           <tr>
@@ -173,9 +124,9 @@ function SitesTable({
         <tbody>
           {sites.map((site, i) => (
             <tr key={i}>
-              <td>{site.hostnames.filter(Boolean).join(", ") || "—"}</td>
-              <td>{site.routes.map((r) => r.match).filter(Boolean).join(", ") || "—"}</td>
-              <td>{site.routes.map((r) => r.upstreams.map((u) => u.address).join(", ")).filter(Boolean).join(" | ") || "—"}</td>
+              <td>{site.hostnames.filter(Boolean).join(", ") || ":"}</td>
+              <td>{site.routes.map((r) => r.match).filter(Boolean).join(", ") || ":"}</td>
+              <td>{site.routes.map((r) => r.upstreams.map((u) => u.address).join(", ")).filter(Boolean).join(" | ") || ":"}</td>
               <td style={{ textAlign: "right" }}>
                 <span className="hstack gap-2 justify-end">
                   <button type="button" className="outline small" onClick={onSwitchToCards} title="Edit" aria-label="Edit site">
@@ -228,7 +179,7 @@ function SiteEditor({
       <div className="vstack gap-4 mt-4">
         <h3 style={{ fontSize: "var(--text-4)", marginBlockEnd: 0 }}>Routes</h3>
         {site.routes.map((route, ri) => (
-          <div key={ri} className="vstack gap-4" style={{ paddingBlockStart: "var(--space-4)", borderBlockStart: "1px solid var(--border)" }}>
+          <div key={ri} className="vstack gap-4 pd-route-group">
             <div data-field>
               <label>Match path</label>
               <input
@@ -242,7 +193,7 @@ function SiteEditor({
                 }
               />
             </div>
-            <div data-field>
+            <div data-field className="pd-mono">
               <label>Upstreams (one per line: host:port)</label>
               <textarea
                 value={route.upstreams.map((u) => u.address).join("\n")}

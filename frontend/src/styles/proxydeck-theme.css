@@ -1,0 +1,355 @@
+/**
+ * ProxyDeck : "The Kinetic Infrastructure" design system
+ */
+
+/* -------------------------------------------------------------------------- */
+/* Design tokens → Oat semantic map (dark command-console only)               */
+/* -------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: dark;
+
+  --pd-surface: #0b1326;
+  --pd-surface-container-low: #131b2e;
+  --pd-surface-container: #171f33;
+  --pd-surface-container-high: #222a3d;
+  --pd-surface-container-highest: #2a3347;
+  --pd-surface-container-lowest: #060e20;
+  --pd-on-surface: #dae2fd;
+  --pd-on-surface-variant: #c1c6d7;
+  --pd-primary-tint: #adc6ff;
+  --pd-primary-container: #4b8eff;
+  --pd-on-primary: #f0f4ff;
+  --pd-outline-variant: #414755;
+
+  --background: var(--pd-surface);
+  --foreground: var(--pd-on-surface);
+  --card: var(--pd-surface-container);
+  --card-foreground: var(--pd-on-surface);
+  --primary: var(--pd-primary-container);
+  --primary-foreground: var(--pd-on-primary);
+  --secondary: var(--pd-surface-container-high);
+  --secondary-foreground: var(--pd-on-surface);
+  --muted: var(--pd-surface-container-low);
+  --muted-foreground: var(--pd-on-surface-variant);
+  --faint: var(--pd-surface-container-lowest);
+  --faint-foreground: #8b92a8;
+  --accent: color-mix(in srgb, var(--pd-surface-container-high) 85%, var(--pd-surface));
+  --danger: #ffb4ab;
+  --danger-foreground: #1a0c0c;
+  --success: #4edea3;
+  --success-foreground: #00311f;
+  --warning: #ffb95f;
+  --warning-foreground: #3e2400;
+  --border: color-mix(in srgb, var(--pd-outline-variant) 20%, transparent);
+  --input: color-mix(in srgb, var(--pd-outline-variant) 35%, transparent);
+  --ring: var(--pd-primary-tint);
+
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
+
+  --space-12: 2.75rem;
+
+  --shadow-pd-ambient: 0 8px 24px color-mix(in srgb, var(--pd-primary-tint) 8%, transparent);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Typography : display vs UI vs data                                         */
+/* -------------------------------------------------------------------------- */
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+h5,
+h6 {
+  font-family: var(--font-sans);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Layout: no-line sidebar / top bar (tonal boundaries only)                    */
+/* -------------------------------------------------------------------------- */
+
+.pd-sidebar-layout > aside[data-sidebar] {
+  background-color: var(--pd-surface-container-low);
+  border-inline-end: none;
+  box-shadow: none;
+}
+
+.pd-sidebar-layout > nav[data-topnav] {
+  background-color: var(--pd-surface-container-low);
+  border-bottom: none;
+  box-shadow: none;
+}
+
+.pd-sidebar-layout aside details {
+  border: none;
+}
+
+.pd-sidebar-layout aside details[open] summary,
+.pd-sidebar-layout aside summary {
+  border-bottom: none;
+}
+
+.pd-oat-main-inner {
+  padding: var(--space-12) var(--space-6);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Cards & surfaces                                                           */
+/* -------------------------------------------------------------------------- */
+
+.card {
+  background-color: var(--pd-surface-container);
+  border: none;
+  box-shadow: none;
+}
+
+a.card.pd-action-card {
+  transition: background-color var(--transition-fast);
+}
+
+a.card.pd-action-card:hover {
+  background-color: var(--pd-surface-container-high);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Primary actions : lithographic gradient + tactile top highlight            */
+/* -------------------------------------------------------------------------- */
+
+/* Unlayered so it wins over Oat @layer base */
+:is(button, [type="submit"], [type="reset"], [type="button"], a.button):not(.outline):not(.ghost):not([data-variant="secondary"]):not(
+    [data-variant="danger"]
+  ) {
+  background: linear-gradient(135deg, var(--pd-primary-tint) 0%, var(--pd-primary-container) 100%);
+  color: var(--pd-on-primary);
+  border-color: transparent;
+  box-shadow: inset 0 1px 0 0 color-mix(in srgb, #e8f0ff 45%, transparent);
+}
+
+:is(button, [type="submit"], [type="reset"], [type="button"], a.button):not(.outline):not(.ghost):not([data-variant="secondary"]):not(
+    [data-variant="danger"]
+  ):hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--pd-primary-tint) 88%, white) 0%,
+    color-mix(in srgb, var(--pd-primary-container) 88%, white) 100%
+  );
+}
+
+:is(button, [type="submit"], [type="reset"], [type="button"], a.button).outline:not([data-variant="danger"]) {
+  border-color: color-mix(in srgb, #8b90a0 30%, transparent);
+  color: var(--pd-primary-tint);
+}
+
+:is(button, [type="submit"], [type="reset"], [type="button"], a.button).outline:not([data-variant="danger"]):hover:not(:disabled) {
+  color: var(--pd-primary-tint);
+  background-color: color-mix(in srgb, var(--pd-primary-container) 12%, transparent);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Badges : signal system + technical corners                                 */
+/* -------------------------------------------------------------------------- */
+
+.badge {
+  border-radius: var(--radius-small);
+}
+
+.badge.secondary {
+  background-color: color-mix(in srgb, var(--pd-surface-container-high) 80%, transparent);
+  color: var(--pd-on-surface-variant);
+}
+
+.badge.pd-signal-active {
+  color: #4edea3;
+  background-color: #00311f;
+}
+
+.badge.pd-signal-warning {
+  color: #ffb95f;
+  background-color: #3e2400;
+}
+
+.badge.pd-signal-critical {
+  color: #ffb4ab;
+  background-color: #93000a;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Code / logs : data layer                                                   */
+/* -------------------------------------------------------------------------- */
+
+.pd-code-block-scroll {
+  max-height: 60vh;
+  overflow: auto;
+}
+
+.pd-code-block,
+pre.pd-code-block {
+  margin: 0;
+  overflow: auto;
+  padding: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-7);
+  line-height: 1.55;
+  color: var(--pd-on-surface-variant);
+  background-color: var(--pd-surface-container-lowest);
+  border-radius: var(--radius-medium);
+  border: none;
+  border-left: 2px solid var(--pd-primary-tint);
+  box-shadow: none;
+}
+
+.pd-code-block code,
+pre.pd-code-block code {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Gridless tables                                                            */
+/* -------------------------------------------------------------------------- */
+
+.pd-table-gridless table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.pd-table-gridless thead {
+  border-bottom: none;
+}
+
+.pd-table-gridless thead th {
+  padding: 0.9rem var(--space-3);
+  font-weight: var(--font-medium);
+  color: var(--pd-on-surface-variant);
+  background-color: var(--pd-surface-container-highest);
+  border: none;
+}
+
+.pd-table-gridless tbody tr {
+  border-bottom: none;
+  transition: background-color var(--transition-fast);
+}
+
+.pd-table-gridless tbody td {
+  padding: 0.9rem var(--space-3);
+  vertical-align: top;
+  border: none;
+}
+
+.pd-table-gridless tbody tr:hover {
+  background-color: color-mix(in srgb, white 5%, transparent);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Page patterns                                                              */
+/* -------------------------------------------------------------------------- */
+
+.pd-page-header {
+  margin-block-end: var(--space-12);
+}
+
+.pd-section-stack {
+  margin-block-end: var(--space-12);
+}
+
+.pd-auth-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background: var(--pd-surface);
+}
+
+.pd-stack-divider {
+  margin-block-start: var(--space-6);
+  padding-block-start: var(--space-6);
+  border: none;
+}
+
+.pd-site-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.pd-site-list > li {
+  list-style: none;
+}
+
+.pd-footer-actions {
+  padding-block-start: var(--space-6);
+  margin-block-start: var(--space-6);
+  border: none;
+}
+
+.pd-route-group {
+  padding-block-start: var(--space-4);
+  margin-block-start: var(--space-4);
+  border: none;
+}
+
+.pd-history-row {
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--pd-surface-container-low);
+  border-radius: var(--radius-medium);
+}
+
+.pd-status-connected {
+  color: var(--success);
+  font-weight: 500;
+}
+
+.pd-status-idle {
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+/* Inputs on dark surfaces */
+:where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="color"]), textarea, select) {
+  background-color: var(--pd-surface-container-lowest);
+  color: var(--pd-on-surface);
+}
+
+/* Alerts: softer containment without heavy outlines */
+[role="alert"][data-variant="success"],
+[role="alert"][data-variant="danger"] {
+  border: none;
+}
+
+.pd-app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--pd-surface);
+}
+
+.pd-page-header h1,
+.pd-auth-shell h1 {
+  margin-block-start: 0;
+}
+
+[data-sidebar-toggle] {
+  border-color: color-mix(in srgb, var(--pd-outline-variant) 25%, transparent);
+  background-color: transparent;
+}
+
+.pd-mono,
+.pd-mono textarea {
+  font-family: var(--font-mono);
+}

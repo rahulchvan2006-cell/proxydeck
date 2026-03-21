@@ -1,23 +1,14 @@
-import { useEffect, useState } from "react";
+import { useLogs } from "./hooks/useLogs";
 
 export function Logs() {
-  const [lines, setLines] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/logs", { credentials: "include" })
-      .then((r) => r.json())
-      .then((data) => setLines(Array.isArray(data.lines) ? data.lines : []))
-      .catch(() => setLines([]))
-      .finally(() => setLoading(false));
-  }, []);
+  const { lines, loading } = useLogs();
 
   if (loading) {
     return (
       <>
-        <header className="mb-6">
+        <header className="pd-page-header">
           <h1>Logs</h1>
-          <p className="text-light">Proxy log output.</p>
+          <p className="text-light">Proxy : log output from your configured log file.</p>
         </header>
         <div className="card p-4">
           <p className="text-light align-center p-4">Loading…</p>
@@ -28,15 +19,15 @@ export function Logs() {
 
   return (
     <>
-      <header className="mb-6">
+      <header className="pd-page-header">
         <h1>Logs</h1>
-        <p className="text-light">Proxy log output. Set PROXY_LOG_FILE in the environment to tail a log file.</p>
+        <p className="text-light">Proxy : tail output when PROXY_LOG_FILE is set in the environment.</p>
       </header>
       <article className="card">
         {lines.length === 0 ? (
           <p className="text-light align-center p-4">No log lines. Set PROXY_LOG_FILE to a log file path.</p>
         ) : (
-          <pre style={{ maxHeight: "60vh", overflow: "auto", margin: 0 }}>
+          <pre className="pd-code-block pd-code-block-scroll">
             <code>{lines.join("\n")}</code>
           </pre>
         )}
