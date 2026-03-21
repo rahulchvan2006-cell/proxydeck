@@ -30,14 +30,13 @@ export function Layout() {
         <button type="button" data-sidebar-toggle aria-label="Toggle menu" className="outline small">
           ☰
         </button>
-        <span style={{ fontWeight: 600 }}>Proxydeck</span>
+        {/* <span style={{ fontWeight: 600 }}>Proxydeck</span> */}
       </nav>
 
       <aside data-sidebar aria-label="Application">
-        <header>
-          <NavLink to="/proxy" className="unstyled hstack gap-2" aria-label="Proxydeck home">
-            <img src="/logo.svg" alt="" width={32} height={32} style={{ display: "block" }} />
-            <span style={{ fontWeight: 700, fontSize: "var(--text-4)" }}>Proxydeck</span>
+        <header className="pd-sidebar-header">
+          <NavLink to="/proxy" className="pd-sidebar-brand unstyled" aria-label="Proxydeck home">
+            <span className="pd-sidebar-wordmark">Proxydeck</span>
           </NavLink>
         </header>
 
