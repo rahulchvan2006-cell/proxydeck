@@ -5,7 +5,7 @@ export function Signup() {
 
   if (checkingSession || allowSignup === null) {
     return (
-      <div className="flex flex-col items-center justify-center" style={{ minHeight: "100vh", padding: "var(--space-6)" }}>
+      <div className="pd-auth-shell">
         <div className="card p-4" style={{ maxWidth: "24rem", width: "100%" }}>
           <p>Loading…</p>
         </div>
@@ -14,7 +14,7 @@ export function Signup() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center" style={{ minHeight: "100vh", padding: "var(--space-6)" }}>
+    <div className="pd-auth-shell">
       <div style={{ maxWidth: "24rem", width: "100%" }}>
         <article className="card p-4">
           <header className="mb-4">
@@ -47,7 +47,7 @@ export function Signup() {
               {loading ? "Creating account…" : "Create account"}
             </button>
           </form>
-          <p className="text-light mt-4 pt-4" style={{ borderTop: "1px solid var(--border)", marginBlockEnd: 0 }}>
+          <p className="text-light pd-stack-divider" style={{ marginBlockEnd: 0 }}>
             Already have an account? <a href="/login">Sign in</a>
           </p>
         </article>

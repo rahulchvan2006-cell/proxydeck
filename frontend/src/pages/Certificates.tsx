@@ -6,7 +6,7 @@ export function Certificates() {
   if (loading) {
     return (
       <>
-        <header className="mb-6">
+        <header className="pd-page-header">
           <h1>Certificates</h1>
           <p className="text-light">Proxy — TLS certificates managed by Caddy or Traefik.</p>
         </header>
@@ -19,7 +19,7 @@ export function Certificates() {
 
   return (
     <>
-      <header className="mb-6">
+      <header className="pd-page-header">
         <h1>Certificates</h1>
         <p className="text-light">Proxy — TLS certificates (read-only). ACME certs are managed when you add sites with TLS.</p>
       </header>
@@ -27,7 +27,7 @@ export function Certificates() {
         {certs.length === 0 ? (
           <p className="text-light align-center p-4">No certificate data. Enable TLS on a site to request ACME certs.</p>
         ) : (
-          <div className="table">
+          <div className="table pd-table-gridless">
             <table>
               <thead>
                 <tr>

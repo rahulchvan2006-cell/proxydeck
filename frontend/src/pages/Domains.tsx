@@ -1,7 +1,7 @@
 export function Domains() {
   return (
     <>
-      <header className="mb-6">
+      <header className="pd-page-header">
         <h1>Domains</h1>
         <p className="text-light">
           Your domain name portfolio. This area is separate from reverse proxy configuration under{" "}
@@ -14,8 +14,7 @@ export function Domains() {
           Portfolio
         </h2>
         <p className="text-light" style={{ marginBlockEnd: 0 }}>
-          Domain list, add/edit, and API-backed storage will land here next (see{" "}
-          <code>docs/domain-portfolio-phases.md</code>, Phase 1). For now, use <strong>Proxy → Sites</strong>{" "}
+          Domain list, add/edit, and API-backed storage will land here. For now, use <strong>Proxy → Sites</strong>{" "}
           to manage hostnames served by Caddy or Traefik.
         </p>
       </section>

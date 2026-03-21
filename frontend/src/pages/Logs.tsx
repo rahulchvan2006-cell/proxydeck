@@ -6,7 +6,7 @@ export function Logs() {
   if (loading) {
     return (
       <>
-        <header className="mb-6">
+        <header className="pd-page-header">
           <h1>Logs</h1>
           <p className="text-light">Proxy — log output from your configured log file.</p>
         </header>
@@ -19,7 +19,7 @@ export function Logs() {
 
   return (
     <>
-      <header className="mb-6">
+      <header className="pd-page-header">
         <h1>Logs</h1>
         <p className="text-light">Proxy — tail output when PROXY_LOG_FILE is set in the environment.</p>
       </header>
@@ -27,7 +27,7 @@ export function Logs() {
         {lines.length === 0 ? (
           <p className="text-light align-center p-4">No log lines. Set PROXY_LOG_FILE to a log file path.</p>
         ) : (
-          <pre style={{ maxHeight: "60vh", overflow: "auto", margin: 0 }}>
+          <pre className="pd-code-block pd-code-block-scroll">
             <code>{lines.join("\n")}</code>
           </pre>
         )}

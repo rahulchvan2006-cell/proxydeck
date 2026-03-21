@@ -20,7 +20,7 @@ export function Sites() {
   if (loading) {
     return (
       <>
-        <header className="mb-6">
+        <header className="pd-page-header">
           <h1>Sites</h1>
           <p className="text-light">Proxy — configure hostnames and routes for Caddy or Traefik.</p>
         </header>
@@ -33,7 +33,7 @@ export function Sites() {
 
   return (
     <>
-      <header className="mb-6">
+      <header className="pd-page-header">
         <h1>Sites</h1>
         <p className="text-light">Proxy — configure hostnames and routes for Caddy or Traefik.</p>
         <div className="hstack gap-2 mt-4">
@@ -83,15 +83,15 @@ export function Sites() {
             onRemove={removeSite}
           />
         ) : (
-          <ul className="unstyled vstack" style={{ padding: 0, margin: 0, gap: 0 }}>
+          <ul className="pd-site-list">
             {config.sites.map((site, i) => (
-              <li key={i} style={{ listStyle: "none", borderBottom: "1px solid var(--border)", paddingBlockEnd: "var(--space-6)", marginBlockEnd: "var(--space-6)" }}>
+              <li key={i}>
                 <SiteEditor site={site} onChange={(s) => updateSite(i, s)} onRemove={() => removeSite(i)} />
               </li>
             ))}
           </ul>
         )}
-        <footer className="hstack gap-2 mt-6" style={{ paddingBlockStart: "var(--space-4)", borderTop: "1px solid var(--border)" }}>
+        <footer className="hstack gap-2 pd-footer-actions">
           <button type="button" className="outline" onClick={addSite}>Add site</button>
           <button type="button" className="outline" onClick={validate} disabled={!config.sites.length}>Validate</button>
           <button type="button" onClick={apply} disabled={!config.sites.length}>Apply config</button>
@@ -111,7 +111,7 @@ function SitesTable({
   onRemove: (index: number) => void;
 }) {
   return (
-    <div className="table" style={{ overflowX: "auto" }}>
+    <div className="table pd-table-gridless" style={{ overflowX: "auto" }}>
       <table>
         <thead>
           <tr>
@@ -179,7 +179,7 @@ function SiteEditor({
       <div className="vstack gap-4 mt-4">
         <h3 style={{ fontSize: "var(--text-4)", marginBlockEnd: 0 }}>Routes</h3>
         {site.routes.map((route, ri) => (
-          <div key={ri} className="vstack gap-4" style={{ paddingBlockStart: "var(--space-4)", borderBlockStart: "1px solid var(--border)" }}>
+          <div key={ri} className="vstack gap-4 pd-route-group">
             <div data-field>
               <label>Match path</label>
               <input
@@ -193,7 +193,7 @@ function SiteEditor({
                 }
               />
             </div>
-            <div data-field>
+            <div data-field className="pd-mono">
               <label>Upstreams (one per line: host:port)</label>
               <textarea
                 value={route.upstreams.map((u) => u.address).join("\n")}

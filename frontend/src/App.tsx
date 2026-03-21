@@ -20,7 +20,7 @@ function Protected({ children }: { children: React.ReactNode }) {
 
 export function App() {
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div className="pd-app-root">
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
