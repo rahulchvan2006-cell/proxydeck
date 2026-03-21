@@ -1,16 +1,7 @@
-import { useEffect, useState } from "react";
+import { useLogs } from "./hooks/useLogs";
 
 export function Logs() {
-  const [lines, setLines] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/logs", { credentials: "include" })
-      .then((r) => r.json())
-      .then((data) => setLines(Array.isArray(data.lines) ? data.lines : []))
-      .catch(() => setLines([]))
-      .finally(() => setLoading(false));
-  }, []);
+  const { lines, loading } = useLogs();
 
   if (loading) {
     return (

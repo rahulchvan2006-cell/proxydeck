@@ -1,27 +1,8 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-interface ProxyStatus {
-  provider: "caddy" | "traefik" | null;
-  message?: string;
-}
+import { useDashboard } from "./hooks/useDashboard";
 
 export function Dashboard() {
-  const [status, setStatus] = useState<ProxyStatus | null>(null);
-
-  useEffect(() => {
-    fetch("/api/proxy/status", { credentials: "include" })
-      .then(async (r) => {
-        const text = await r.text();
-        const data = (() => { try { return JSON.parse(text); } catch { return null; } })();
-        if (!r.ok) {
-          return { provider: null, message: data?.error ?? data?.message ?? `Request failed (${r.status})` };
-        }
-        return data ?? { provider: null, message: "Invalid response." };
-      })
-      .then(setStatus)
-      .catch(() => setStatus({ provider: null, message: "Could not reach server." }));
-  }, []);
+  const { status } = useDashboard();
 
   const hasProxy = status?.provider != null;
   const providerLabel = status?.provider ?? "None detected";

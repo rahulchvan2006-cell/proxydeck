@@ -1,55 +1,8 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-interface Preview {
-  provider: string | null;
-  raw: string;
-}
-
-interface HistoryEntry {
-  id: string;
-  createdAt: string;
-  provider: string;
-  comment: string | null;
-}
+import { useConfig } from "./hooks/useConfig";
 
 export function Config() {
-  const [preview, setPreview] = useState<Preview>({ provider: null, raw: "" });
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [rollbackResult, setRollbackResult] = useState<{ ok: boolean; error?: string } | null>(null);
-
-  const load = () => {
-    setLoading(true);
-    Promise.all([
-      fetch("/api/config/preview", { credentials: "include" }).then((r) => r.json()),
-      fetch("/api/config/history", { credentials: "include" }).then((r) => r.json()),
-    ])
-      .then(([p, h]) => {
-        setPreview(p);
-        setHistory(Array.isArray(h) ? h : []);
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  };
-
-  useEffect(load, []);
-
-  const rollback = (id: string) => {
-    setRollbackResult(null);
-    fetch("/api/config/rollback", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ id }),
-    })
-      .then((r) => r.json())
-      .then((r) => {
-        setRollbackResult(r);
-        if (r.ok) load();
-      })
-      .catch((e) => setRollbackResult({ ok: false, error: e.message }));
-  };
+  const { preview, history, loading, rollbackResult, rollback } = useConfig();
 
   if (loading) {
     return (

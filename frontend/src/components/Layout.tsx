@@ -1,5 +1,6 @@
-import { useEffect, useRef } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
+import { SESSION_KEY } from "../lib/sessionStorage";
+import { useLayoutSidebar } from "./hooks/useLayoutSidebar";
 import "./LayoutOat.css";
 
 const proxyNav = [
@@ -14,18 +15,13 @@ async function handleLogout(e: React.FormEvent) {
   e.preventDefault();
   await fetch("/api/auth/sign-out", { method: "POST", credentials: "include" });
   try {
-    sessionStorage.removeItem("pd_session");
+    sessionStorage.removeItem(SESSION_KEY);
   } catch (_) {}
   window.location.href = "/login";
 }
 
 export function Layout() {
-  const location = useLocation();
-  const layoutRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    layoutRef.current?.removeAttribute("data-sidebar-open");
-  }, [location.pathname]);
+  const { layoutRef } = useLayoutSidebar();
 
   return (
     <div ref={layoutRef} className="pd-sidebar-layout" data-sidebar-layout>
