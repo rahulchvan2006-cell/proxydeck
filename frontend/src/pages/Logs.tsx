@@ -8,7 +8,7 @@ export function Logs() {
       <>
         <header className="pd-page-header">
           <h1>Logs</h1>
-          <p className="text-light">Proxy — log output from your configured log file.</p>
+          <p className="text-light">Proxy : log output from your configured log file.</p>
         </header>
         <div className="card p-4">
           <p className="text-light align-center p-4">Loading…</p>
@@ -21,7 +21,7 @@ export function Logs() {
     <>
       <header className="pd-page-header">
         <h1>Logs</h1>
-        <p className="text-light">Proxy — tail output when PROXY_LOG_FILE is set in the environment.</p>
+        <p className="text-light">Proxy : tail output when PROXY_LOG_FILE is set in the environment.</p>
       </header>
       <article className="card">
         {lines.length === 0 ? (

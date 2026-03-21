@@ -22,7 +22,7 @@ export function Sites() {
       <>
         <header className="pd-page-header">
           <h1>Sites</h1>
-          <p className="text-light">Proxy — configure hostnames and routes for Caddy or Traefik.</p>
+          <p className="text-light">Proxy : configure hostnames and routes for Caddy or Traefik.</p>
         </header>
         <div className="card p-4">
           <p className="text-light align-center p-4">Loading…</p>
@@ -35,7 +35,7 @@ export function Sites() {
     <>
       <header className="pd-page-header">
         <h1>Sites</h1>
-        <p className="text-light">Proxy — configure hostnames and routes for Caddy or Traefik.</p>
+        <p className="text-light">Proxy : configure hostnames and routes for Caddy or Traefik.</p>
         <div className="hstack gap-2 mt-4">
           <span style={{ fontSize: "var(--text-7)" }}>View:</span>
           <button
@@ -124,9 +124,9 @@ function SitesTable({
         <tbody>
           {sites.map((site, i) => (
             <tr key={i}>
-              <td>{site.hostnames.filter(Boolean).join(", ") || "—"}</td>
-              <td>{site.routes.map((r) => r.match).filter(Boolean).join(", ") || "—"}</td>
-              <td>{site.routes.map((r) => r.upstreams.map((u) => u.address).join(", ")).filter(Boolean).join(" | ") || "—"}</td>
+              <td>{site.hostnames.filter(Boolean).join(", ") || ":"}</td>
+              <td>{site.routes.map((r) => r.match).filter(Boolean).join(", ") || ":"}</td>
+              <td>{site.routes.map((r) => r.upstreams.map((u) => u.address).join(", ")).filter(Boolean).join(" | ") || ":"}</td>
               <td style={{ textAlign: "right" }}>
                 <span className="hstack gap-2 justify-end">
                   <button type="button" className="outline small" onClick={onSwitchToCards} title="Edit" aria-label="Edit site">

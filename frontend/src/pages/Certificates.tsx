@@ -8,7 +8,7 @@ export function Certificates() {
       <>
         <header className="pd-page-header">
           <h1>Certificates</h1>
-          <p className="text-light">Proxy — TLS certificates managed by Caddy or Traefik.</p>
+          <p className="text-light">Proxy : TLS certificates managed by Caddy or Traefik.</p>
         </header>
         <div className="card p-4">
           <p className="text-light align-center p-4">Loading…</p>
@@ -21,7 +21,7 @@ export function Certificates() {
     <>
       <header className="pd-page-header">
         <h1>Certificates</h1>
-        <p className="text-light">Proxy — TLS certificates (read-only). ACME certs are managed when you add sites with TLS.</p>
+        <p className="text-light">Proxy : TLS certificates (read-only). ACME certs are managed when you add sites with TLS.</p>
       </header>
       <article className="card">
         {certs.length === 0 ? (
@@ -40,8 +40,8 @@ export function Certificates() {
                 {certs.map((c, i) => (
                   <tr key={i}>
                     <td>{c.domain}</td>
-                    <td className="text-light">{c.issuer ?? "—"}</td>
-                    <td className="text-light">{c.expiry ?? "—"}</td>
+                    <td className="text-light">{c.issuer ?? ":"}</td>
+                    <td className="text-light">{c.expiry ?? ":"}</td>
                   </tr>
                 ))}
               </tbody>

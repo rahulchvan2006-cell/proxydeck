@@ -9,7 +9,7 @@ export function Config() {
       <>
         <header className="pd-page-header">
           <h1>Config</h1>
-          <p className="text-light">Proxy — preview generated config and rollback history.</p>
+          <p className="text-light">Proxy : preview generated config and rollback history.</p>
         </header>
         <div className="card p-4">
           <p className="text-light align-center p-4">Loading…</p>
@@ -23,7 +23,7 @@ export function Config() {
       <header className="pd-page-header">
         <h1>Config</h1>
         <p className="text-light">
-          Proxy — preview of the config that will be applied. Edit and apply from <Link to="/proxy/sites">Sites</Link>.
+          Proxy : preview of the config that will be applied. Edit and apply from <Link to="/proxy/sites">Sites</Link>.
         </p>
         <p className="hstack gap-2 mt-2">
           <Link to="/proxy/sites" className="button outline small unstyled">
