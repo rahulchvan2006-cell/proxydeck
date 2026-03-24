@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { AppVersionStamp } from "./AppVersionStamp";
+import { BreadcrumbsController } from "./breadcrumbs/BreadcrumbsController";
 import { clearBrowserPersistedState } from "../lib/clearClientState";
 import { signOut } from "../services/auth";
 import { useLayoutSidebar } from "./hooks/useLayoutSidebar";
@@ -95,7 +96,9 @@ export function Layout() {
 
       <main className="pd-oat-main">
         <div className="pd-oat-main-inner">
-          <Outlet />
+          <BreadcrumbsController>
+            <Outlet />
+          </BreadcrumbsController>
         </div>
       </main>
     </div>

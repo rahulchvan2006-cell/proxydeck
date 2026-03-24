@@ -1,8 +1,23 @@
+import { useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
+import { ConfirmDialog, type ConfirmDialogHandle } from "../components/ConfirmDialog";
 import { useConfig } from "./hooks/useConfig";
 
 export function Config() {
   const { preview, history, loading, rollbackResult, rollback } = useConfig();
+  const rollbackDialogRef = useRef<ConfirmDialogHandle>(null);
+  const pendingRollbackIdRef = useRef<string | null>(null);
+
+  const requestRollback = useCallback((id: string) => {
+    pendingRollbackIdRef.current = id;
+    rollbackDialogRef.current?.showModal();
+  }, []);
+
+  const confirmRollback = useCallback(() => {
+    const id = pendingRollbackIdRef.current;
+    pendingRollbackIdRef.current = null;
+    if (id) rollback(id);
+  }, [rollback]);
 
   if (loading) {
     return (
@@ -20,6 +35,13 @@ export function Config() {
 
   return (
     <>
+      <ConfirmDialog
+        ref={rollbackDialogRef}
+        title="Rollback configuration?"
+        message="Restore this saved configuration on the proxy?"
+        confirmLabel="Rollback"
+        onConfirm={confirmRollback}
+      />
       <header className="pd-page-header">
         <h1>Config</h1>
         <p className="text-light">
@@ -62,7 +84,7 @@ export function Config() {
               <li key={entry.id} className="hstack gap-2 pd-history-row">
                 <span style={{ fontSize: "var(--text-7)" }}>{new Date(entry.createdAt).toLocaleString()}</span>
                 <span className="badge secondary">{entry.provider}</span>
-                <button type="button" className="outline small" onClick={() => rollback(entry.id)}>
+                <button type="button" className="outline small" onClick={() => requestRollback(entry.id)}>
                   Rollback
                 </button>
               </li>

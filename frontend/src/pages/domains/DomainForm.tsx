@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDomainBreadcrumbLabel } from "../../components/breadcrumbs/BreadcrumbContext";
+import { ConfirmDialog, type ConfirmDialogHandle } from "../../components/ConfirmDialog";
 import type { Domain } from "../../types/domain";
 import { createDomain, fetchDomainLookup, updateDomain, useDomain } from "../hooks/useDomains";
 
@@ -100,6 +102,7 @@ function NewDomainForm() {
   const [skipPublicLookup, setSkipPublicLookup] = useState(false);
   const [lookupLoading, setLookupLoading] = useState(false);
   const [lookupMessage, setLookupMessage] = useState<string | null>(null);
+  const saveDialogRef = useRef<ConfirmDialogHandle>(null);
 
   async function handlePrefetch() {
     setLookupMessage(null);
@@ -124,8 +127,18 @@ function NewDomainForm() {
     setLookupMessage(`Loaded public suggestions.${errs}`);
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setSubmitError(null);
+    const expiresIso = dateInputToIso(expiresAt);
+    if (expiresAt.trim() && expiresIso === null) {
+      setSubmitError("Invalid expiry date.");
+      return;
+    }
+    saveDialogRef.current?.showModal();
+  }
+
+  async function performCreate() {
     setSubmitError(null);
     setSaving(true);
     const expiresIso = dateInputToIso(expiresAt);
@@ -152,13 +165,17 @@ function NewDomainForm() {
 
   return (
     <>
+      <ConfirmDialog
+        ref={saveDialogRef}
+        title="Create domain?"
+        message="Save this domain to your portfolio?"
+        confirmLabel="Create"
+        onConfirm={() => void performCreate()}
+      />
       <header className="pd-page-header">
         <h1>Add domain</h1>
-        <p className="text-light">
-          <Link to="/domains">← Portfolio</Link>
-        </p>
       </header>
-      <form className="card p-4" onSubmit={(e) => void handleSubmit(e)}>
+      <form className="card p-4" onSubmit={(e) => void handleFormSubmit(e)}>
         {submitError && (
           <div role="alert" data-variant="danger" style={{ marginBlockEnd: "var(--space-4)" }}>
             {submitError}
@@ -217,15 +234,27 @@ function NewDomainForm() {
 
 function EditDomainForm({ domain }: { domain: Domain }) {
   const navigate = useNavigate();
+  useDomainBreadcrumbLabel(domain.hostname);
   const [hostname, setHostname] = useState(() => domain.hostname);
   const [registrarName, setRegistrarName] = useState(() => domain.registrarName ?? "");
   const [expiresAt, setExpiresAt] = useState(() => isoToDateInput(domain.expiresAt));
   const [notes, setNotes] = useState(() => domain.notes ?? "");
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const saveDialogRef = useRef<ConfirmDialogHandle>(null);
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setSubmitError(null);
+    const expiresIso = dateInputToIso(expiresAt);
+    if (expiresAt.trim() && expiresIso === null) {
+      setSubmitError("Invalid expiry date.");
+      return;
+    }
+    saveDialogRef.current?.showModal();
+  }
+
+  async function performSave() {
     setSubmitError(null);
     setSaving(true);
     const expiresIso = dateInputToIso(expiresAt);
@@ -252,13 +281,17 @@ function EditDomainForm({ domain }: { domain: Domain }) {
 
   return (
     <>
+      <ConfirmDialog
+        ref={saveDialogRef}
+        title="Save changes?"
+        message="Update this domain in your portfolio?"
+        confirmLabel="Save"
+        onConfirm={() => void performSave()}
+      />
       <header className="pd-page-header">
         <h1>Edit domain</h1>
-        <p className="text-light">
-          <Link to={`/domains/${domain.id}`}>← {domain.hostname}</Link>
-        </p>
       </header>
-      <form className="card p-4" onSubmit={(e) => void handleSubmit(e)}>
+      <form className="card p-4" onSubmit={(e) => void handleFormSubmit(e)}>
         {submitError && (
           <div role="alert" data-variant="danger" style={{ marginBlockEnd: "var(--space-4)" }}>
             {submitError}
@@ -312,10 +345,7 @@ export function DomainForm() {
           <h1>Edit domain</h1>
         </header>
         <div className="card p-4" role="alert" data-variant="danger">
-          <p>{loadError}</p>
-          <p className="mt-4" style={{ marginBlockEnd: 0 }}>
-            <Link to="/domains">Back to list</Link>
-          </p>
+          <p style={{ marginBlockEnd: 0 }}>{loadError}</p>
         </div>
       </>
     );

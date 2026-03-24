@@ -414,3 +414,19 @@ pre.pd-code-block code {
 .pd-mono textarea {
   font-family: var(--font-mono);
 }
+
+/* Oat <dialog> confirm: constrained width on top of oat.min.css */
+.pd-confirm-dialog {
+  max-width: min(26rem, 100vw - 2rem);
+  margin: auto;
+  border: 1px solid color-mix(in srgb, var(--pd-outline-variant) 45%, transparent);
+}
+
+.pd-confirm-dialog::backdrop {
+  background: color-mix(in srgb, var(--pd-surface) 55%, #000);
+}
+
+.pd-confirm-dialog form > header h3 {
+  margin-block: 0 0.35rem;
+  font-size: var(--text-3);
+}

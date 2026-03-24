@@ -21,6 +21,50 @@
   box-sizing: border-box;
 }
 
+/* Breadcrumbs (replaces per-page “back” links) */
+.pd-breadcrumbs {
+  margin-block-end: var(--space-4);
+}
+
+.pd-breadcrumbs__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: var(--text-7, 0.875rem);
+  color: var(--muted-foreground, var(--pd-on-surface-variant));
+}
+
+.pd-breadcrumbs__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pd-breadcrumbs__item:not(:last-child)::after {
+  content: "/";
+  color: var(--faint-foreground, var(--pd-on-surface-variant));
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.pd-breadcrumbs__link {
+  color: var(--pd-primary-tint);
+  text-decoration: none;
+}
+
+.pd-breadcrumbs__link:hover {
+  text-decoration: underline;
+}
+
+.pd-breadcrumbs__current {
+  color: var(--foreground, var(--pd-on-surface));
+  font-weight: 500;
+}
+
 .pd-sidebar-layout aside[data-sidebar] > header.pd-sidebar-header {
   display: flex;
   justify-content: center;

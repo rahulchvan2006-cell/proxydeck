@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowsClockwise,
@@ -10,6 +10,7 @@ import {
   IdentificationCard,
   Info,
   ListBullets,
+  ListPlus,
   MapPin,
   PencilSimple,
   Trash,
@@ -30,6 +31,9 @@ import {
   resolvedHostsForDisplay,
   sortRdapEventsDesc,
 } from "./domainDetailUtils";
+import { useDomainBreadcrumbLabel } from "../../components/breadcrumbs/BreadcrumbContext";
+import { ConfirmDialog, type ConfirmDialogHandle } from "../../components/ConfirmDialog";
+import { buildPdDraftSiteNavPayload } from "./buildDraftSiteFromDomain";
 import "./DomainDetail.css";
 
 const SNAPSHOT_STALE_MS = 7 * 24 * 60 * 60 * 1000;
@@ -125,10 +129,12 @@ export function DomainDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { domain, loading, error, reload } = useDomain(id);
+  useDomainBreadcrumbLabel(domain?.hostname);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [refreshError, setRefreshError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const deleteDialogRef = useRef<ConfirmDialogHandle>(null);
 
   const enrichment = domain?.enrichment ?? null;
   const rdap = enrichment?.rdap;
@@ -168,9 +174,8 @@ export function DomainDetail() {
     await reload();
   }
 
-  async function handleDelete() {
+  async function runDelete() {
     if (!id) return;
-    if (!window.confirm(`Remove ${domain?.hostname ?? "this domain"} from your portfolio?`)) return;
     setDeleteError(null);
     setDeleting(true);
     const result = await deleteDomain(id);
@@ -199,9 +204,6 @@ export function DomainDetail() {
       <div className="pd-domain-detail__shell">
         <header className="pd-page-header" style={{ marginBlockEnd: "1rem" }}>
           <h1>Domain</h1>
-          <p className="text-light">
-            <Link to="/domains">← Portfolio</Link>
-          </p>
         </header>
         <div className="pd-domain-detail__error-card" role="alert">
           {error ?? "Not found"}
@@ -223,6 +225,14 @@ export function DomainDetail() {
 
   return (
     <div className="pd-domain-detail">
+      <ConfirmDialog
+        ref={deleteDialogRef}
+        title="Remove domain?"
+        message={`Remove ${domain.hostname} from your portfolio?`}
+        confirmLabel="Remove"
+        danger
+        onConfirm={() => void runDelete()}
+      />
       <header className="pd-domain-detail__hero">
         <div className="pd-domain-detail__hero-inner">
           <div className="pd-domain-detail__title-block">
@@ -231,11 +241,6 @@ export function DomainDetail() {
             </div>
             <div className="pd-domain-detail__title-text">
               <h1>{domain.hostname}</h1>
-              <p className="pd-domain-detail__breadcrumb">
-                <Link to="/domains">Portfolio</Link>
-                <span className="pd-domain-detail__muted">/</span>
-                <span className="pd-domain-detail__muted">Domain detail</span>
-              </p>
               <div className="pd-domain-detail__meta">
                 <span
                   className={`pd-domain-detail__chip pd-domain-detail__chip--${chip.variant === "ok" ? "ok" : "stale"}`}
@@ -262,7 +267,7 @@ export function DomainDetail() {
               type="button"
               className="small pd-domain-detail__btn-delete"
               disabled={deleting}
-              onClick={() => void handleDelete()}
+              onClick={() => deleteDialogRef.current?.showModal()}
             >
               <Trash size={18} weight="duotone" aria-hidden />
               {deleting ? "Removing…" : "Delete"}
@@ -275,6 +280,20 @@ export function DomainDetail() {
               <PencilSimple size={18} weight="duotone" aria-hidden />
               Edit
             </Link>
+            <button
+              type="button"
+              className="button small pd-domain-detail__btn-edit"
+              disabled={!domain.hostname.trim()}
+              title={!domain.hostname.trim() ? "Hostname required" : "Open Sites with a new row prefilled from this domain"}
+              onClick={() =>
+                navigate("/proxy/sites", {
+                  state: { pdDraftSite: buildPdDraftSiteNavPayload(domain) },
+                })
+              }
+            >
+              <ListPlus size={18} weight="duotone" aria-hidden />
+              Create proxy site
+            </button>
             <button
               type="button"
               className="small pd-domain-detail__btn-ghost"
