@@ -1,6 +1,7 @@
 import { PencilSimple, SquaresFour, Table, Trash } from "@phosphor-icons/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ConfirmDialog, type ConfirmDialogHandle } from "../components/ConfirmDialog";
 import type { Site, Route, Upstream } from "../types/proxy";
 import type { PdDraftSiteLocationState } from "./domains/buildDraftSiteFromDomain";
 import { useSites } from "./hooks/useSites";
@@ -17,6 +18,9 @@ export function Sites() {
   const navigate = useNavigate();
   const [navDraft] = useState(() => readPdDraftFromLocationState(location.state));
   const clearedLocationRef = useRef(false);
+  const removeDialogRef = useRef<ConfirmDialogHandle>(null);
+  const pendingRemoveRef = useRef<number | null>(null);
+  const applyDialogRef = useRef<ConfirmDialogHandle>(null);
 
   const {
     config,
@@ -33,6 +37,17 @@ export function Sites() {
     validate,
     apply,
   } = useSites({ pendingSite: navDraft?.site ?? null });
+
+  const requestRemoveSite = useCallback((index: number) => {
+    pendingRemoveRef.current = index;
+    removeDialogRef.current?.showModal();
+  }, []);
+
+  const confirmRemoveSite = useCallback(() => {
+    const i = pendingRemoveRef.current;
+    pendingRemoveRef.current = null;
+    if (i !== null) void removeSite(i);
+  }, [removeSite]);
 
   useEffect(() => {
     if (loading || !navDraft || clearedLocationRef.current) return;
@@ -59,6 +74,21 @@ export function Sites() {
 
   return (
     <>
+      <ConfirmDialog
+        ref={removeDialogRef}
+        title="Remove site?"
+        message="This applies to the proxy immediately."
+        confirmLabel="Remove"
+        danger
+        onConfirm={confirmRemoveSite}
+      />
+      <ConfirmDialog
+        ref={applyDialogRef}
+        title="Apply configuration?"
+        message="Push the current site list to the proxy?"
+        confirmLabel="Apply"
+        onConfirm={() => void apply()}
+      />
       <header className="pd-page-header">
         <h1>Sites</h1>
         <p className="text-light">
@@ -118,7 +148,7 @@ export function Sites() {
             sites={config.sites}
             applying={applying}
             onSwitchToCards={() => setViewMode("cards")}
-            onRemove={removeSite}
+            onRemove={requestRemoveSite}
           />
         ) : (
           <ul className="pd-site-list">
@@ -128,7 +158,7 @@ export function Sites() {
                   site={site}
                   applying={applying}
                   onChange={(s) => updateSite(i, s)}
-                  onRemove={() => void removeSite(i)}
+                  onRemove={() => requestRemoveSite(i)}
                 />
               </li>
             ))}
@@ -141,7 +171,7 @@ export function Sites() {
           <button type="button" className="outline" onClick={validate} disabled={applying}>
             Validate
           </button>
-          <button type="button" onClick={apply} disabled={applying}>
+          <button type="button" onClick={() => applyDialogRef.current?.showModal()} disabled={applying}>
             Apply config
           </button>
         </footer>

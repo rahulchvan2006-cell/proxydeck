@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowsClockwise,
@@ -32,6 +32,7 @@ import {
   sortRdapEventsDesc,
 } from "./domainDetailUtils";
 import { useDomainBreadcrumbLabel } from "../../components/breadcrumbs/BreadcrumbContext";
+import { ConfirmDialog, type ConfirmDialogHandle } from "../../components/ConfirmDialog";
 import { buildPdDraftSiteNavPayload } from "./buildDraftSiteFromDomain";
 import "./DomainDetail.css";
 
@@ -133,6 +134,7 @@ export function DomainDetail() {
   const [deleting, setDeleting] = useState(false);
   const [refreshError, setRefreshError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const deleteDialogRef = useRef<ConfirmDialogHandle>(null);
 
   const enrichment = domain?.enrichment ?? null;
   const rdap = enrichment?.rdap;
@@ -172,9 +174,8 @@ export function DomainDetail() {
     await reload();
   }
 
-  async function handleDelete() {
+  async function runDelete() {
     if (!id) return;
-    if (!window.confirm(`Remove ${domain?.hostname ?? "this domain"} from your portfolio?`)) return;
     setDeleteError(null);
     setDeleting(true);
     const result = await deleteDomain(id);
@@ -224,6 +225,14 @@ export function DomainDetail() {
 
   return (
     <div className="pd-domain-detail">
+      <ConfirmDialog
+        ref={deleteDialogRef}
+        title="Remove domain?"
+        message={`Remove ${domain.hostname} from your portfolio?`}
+        confirmLabel="Remove"
+        danger
+        onConfirm={() => void runDelete()}
+      />
       <header className="pd-domain-detail__hero">
         <div className="pd-domain-detail__hero-inner">
           <div className="pd-domain-detail__title-block">
@@ -258,7 +267,7 @@ export function DomainDetail() {
               type="button"
               className="small pd-domain-detail__btn-delete"
               disabled={deleting}
-              onClick={() => void handleDelete()}
+              onClick={() => deleteDialogRef.current?.showModal()}
             >
               <Trash size={18} weight="duotone" aria-hidden />
               {deleting ? "Removing…" : "Delete"}
