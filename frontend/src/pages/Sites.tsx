@@ -1,8 +1,23 @@
 import { PencilSimple, SquaresFour, Table, Trash } from "@phosphor-icons/react";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import type { Site, Route, Upstream } from "../types/proxy";
+import type { PdDraftSiteLocationState } from "./domains/buildDraftSiteFromDomain";
 import { useSites } from "./hooks/useSites";
 
+function readPdDraftFromLocationState(state: unknown) {
+  if (state === null || typeof state !== "object" || !("pdDraftSite" in state)) return null;
+  const raw = (state as PdDraftSiteLocationState).pdDraftSite;
+  if (!raw || typeof raw !== "object" || !("site" in raw) || !("domainId" in raw)) return null;
+  return raw;
+}
+
 export function Sites() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [navDraft] = useState(() => readPdDraftFromLocationState(location.state));
+  const clearedLocationRef = useRef(false);
+
   const {
     config,
     loading,
@@ -11,12 +26,19 @@ export function Sites() {
     setViewMode,
     validateResult,
     applyResult,
+    draftHostnamesOverlap,
     addSite,
     removeSite,
     updateSite,
     validate,
     apply,
-  } = useSites();
+  } = useSites({ pendingSite: navDraft?.site ?? null });
+
+  useEffect(() => {
+    if (loading || !navDraft || clearedLocationRef.current) return;
+    clearedLocationRef.current = true;
+    navigate(location.pathname, { replace: true, state: {} });
+  }, [loading, location.pathname, navDraft, navigate]);
 
   if (loading) {
     return (
@@ -66,6 +88,11 @@ export function Sites() {
         </div>
       </header>
       <article className="card">
+        {draftHostnamesOverlap ? (
+          <div role="status" className="text-light" style={{ marginBlockEnd: "var(--space-4)" }}>
+            Some hostnames from this draft may already be routed on another site. Review before Apply.
+          </div>
+        ) : null}
         {validateResult && (
           <div role="alert" data-variant={validateResult.valid ? "success" : "danger"} style={{ marginBlockEnd: "var(--space-4)" }}>
             {validateResult.valid ? "Config is valid." : validateResult.error}

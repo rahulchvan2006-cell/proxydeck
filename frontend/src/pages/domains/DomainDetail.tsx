@@ -10,6 +10,7 @@ import {
   IdentificationCard,
   Info,
   ListBullets,
+  ListPlus,
   MapPin,
   PencilSimple,
   Trash,
@@ -30,6 +31,7 @@ import {
   resolvedHostsForDisplay,
   sortRdapEventsDesc,
 } from "./domainDetailUtils";
+import { buildPdDraftSiteNavPayload } from "./buildDraftSiteFromDomain";
 import "./DomainDetail.css";
 
 const SNAPSHOT_STALE_MS = 7 * 24 * 60 * 60 * 1000;
@@ -275,6 +277,20 @@ export function DomainDetail() {
               <PencilSimple size={18} weight="duotone" aria-hidden />
               Edit
             </Link>
+            <button
+              type="button"
+              className="button small pd-domain-detail__btn-edit"
+              disabled={!domain.hostname.trim()}
+              title={!domain.hostname.trim() ? "Hostname required" : "Open Sites with a new row prefilled from this domain"}
+              onClick={() =>
+                navigate("/proxy/sites", {
+                  state: { pdDraftSite: buildPdDraftSiteNavPayload(domain) },
+                })
+              }
+            >
+              <ListPlus size={18} weight="duotone" aria-hidden />
+              Create proxy site
+            </button>
             <button
               type="button"
               className="small pd-domain-detail__btn-ghost"
