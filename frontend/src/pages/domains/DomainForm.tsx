@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDomainBreadcrumbLabel } from "../../components/breadcrumbs/BreadcrumbContext";
 import type { Domain } from "../../types/domain";
 import { createDomain, fetchDomainLookup, updateDomain, useDomain } from "../hooks/useDomains";
 
@@ -154,9 +155,6 @@ function NewDomainForm() {
     <>
       <header className="pd-page-header">
         <h1>Add domain</h1>
-        <p className="text-light">
-          <Link to="/domains">← Portfolio</Link>
-        </p>
       </header>
       <form className="card p-4" onSubmit={(e) => void handleSubmit(e)}>
         {submitError && (
@@ -217,6 +215,7 @@ function NewDomainForm() {
 
 function EditDomainForm({ domain }: { domain: Domain }) {
   const navigate = useNavigate();
+  useDomainBreadcrumbLabel(domain.hostname);
   const [hostname, setHostname] = useState(() => domain.hostname);
   const [registrarName, setRegistrarName] = useState(() => domain.registrarName ?? "");
   const [expiresAt, setExpiresAt] = useState(() => isoToDateInput(domain.expiresAt));
@@ -254,9 +253,6 @@ function EditDomainForm({ domain }: { domain: Domain }) {
     <>
       <header className="pd-page-header">
         <h1>Edit domain</h1>
-        <p className="text-light">
-          <Link to={`/domains/${domain.id}`}>← {domain.hostname}</Link>
-        </p>
       </header>
       <form className="card p-4" onSubmit={(e) => void handleSubmit(e)}>
         {submitError && (
@@ -312,10 +308,7 @@ export function DomainForm() {
           <h1>Edit domain</h1>
         </header>
         <div className="card p-4" role="alert" data-variant="danger">
-          <p>{loadError}</p>
-          <p className="mt-4" style={{ marginBlockEnd: 0 }}>
-            <Link to="/domains">Back to list</Link>
-          </p>
+          <p style={{ marginBlockEnd: 0 }}>{loadError}</p>
         </div>
       </>
     );

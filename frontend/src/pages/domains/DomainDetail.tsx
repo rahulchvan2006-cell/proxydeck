@@ -31,6 +31,7 @@ import {
   resolvedHostsForDisplay,
   sortRdapEventsDesc,
 } from "./domainDetailUtils";
+import { useDomainBreadcrumbLabel } from "../../components/breadcrumbs/BreadcrumbContext";
 import { buildPdDraftSiteNavPayload } from "./buildDraftSiteFromDomain";
 import "./DomainDetail.css";
 
@@ -127,6 +128,7 @@ export function DomainDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { domain, loading, error, reload } = useDomain(id);
+  useDomainBreadcrumbLabel(domain?.hostname);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [refreshError, setRefreshError] = useState<string | null>(null);
@@ -201,9 +203,6 @@ export function DomainDetail() {
       <div className="pd-domain-detail__shell">
         <header className="pd-page-header" style={{ marginBlockEnd: "1rem" }}>
           <h1>Domain</h1>
-          <p className="text-light">
-            <Link to="/domains">← Portfolio</Link>
-          </p>
         </header>
         <div className="pd-domain-detail__error-card" role="alert">
           {error ?? "Not found"}
@@ -233,11 +232,6 @@ export function DomainDetail() {
             </div>
             <div className="pd-domain-detail__title-text">
               <h1>{domain.hostname}</h1>
-              <p className="pd-domain-detail__breadcrumb">
-                <Link to="/domains">Portfolio</Link>
-                <span className="pd-domain-detail__muted">/</span>
-                <span className="pd-domain-detail__muted">Domain detail</span>
-              </p>
               <div className="pd-domain-detail__meta">
                 <span
                   className={`pd-domain-detail__chip pd-domain-detail__chip--${chip.variant === "ok" ? "ok" : "stale"}`}
