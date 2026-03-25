@@ -23,6 +23,10 @@ export function openapiDocsPlugin() {
       },
       tags: [
         { name: "domains", description: "User-scoped domain portfolio" },
+        {
+          name: "infrastructure",
+          description: "Server inventory (providers, metadata; no secrets)",
+        },
         { name: "config", description: "Reverse proxy configuration" },
         { name: "system", description: "Health, signup gate, proxy status, logs" },
         { name: "auth", description: "Better Auth (forwarded under `/api/auth/*`)" },

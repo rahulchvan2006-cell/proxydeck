@@ -14,7 +14,9 @@ export function toResponse(result: ApiResult): Response {
 export function dbFailureBody(err: unknown): { status: number; body: unknown } {
   const msg = err instanceof Error ? err.message : "Database error";
   const migrateHint =
-    /column|does not exist|relation .domains|undefined_(column|table)/i.test(msg)
+    /column|does not exist|relation .(domains|infrastructure_servers)|undefined_(column|table)/i.test(
+      msg
+    )
       ? " Run `bun run db:migrate` with the same DATABASE_URL the app uses."
       : "";
   return { status: 500, body: { error: `${msg}${migrateHint}` } };
