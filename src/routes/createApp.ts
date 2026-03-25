@@ -4,6 +4,7 @@ import { apiAuthGuard } from "../middleware/apiAuthGuard";
 import { requestLogPlugin } from "../middleware/requestLog";
 import { domainRoutes } from "../controllers/domain.controller";
 import { configApiRoutes } from "../controllers/configApi.controller";
+import { infrastructureServerRoutes } from "../controllers/infrastructureServer.controller";
 import { systemRoutes } from "../controllers/system.controller";
 import { openapiDocsPlugin } from "../plugins/openapiDocs";
 import { createSpaStaticHandler } from "../static/spaStatic";
@@ -21,6 +22,7 @@ export function createApp(frontendDistDir: string) {
       .use(requestLogPlugin())
       .onBeforeHandle(apiAuthGuard)
       .use(domainRoutes)
+      .use(infrastructureServerRoutes)
       .use(configApiRoutes)
       .use(systemRoutes)
       .use(openapiDocsPlugin())

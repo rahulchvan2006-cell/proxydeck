@@ -24,6 +24,7 @@ import {
   insertDomain,
   updateDomainForUser,
 } from "../repositories/domain.repository";
+import { unlinkDomainIdFromServersForUser } from "../repositories/infrastructureServer.repository";
 
 function unauthorized(): ApiResult {
   return { status: 401, body: { error: "Unauthorized" } };
@@ -329,6 +330,11 @@ export async function deleteDomainForUserRequest(
 ): Promise<ApiResult> {
   if (!userId) return unauthorized();
   if (!domainId) return notFound();
+  try {
+    await unlinkDomainIdFromServersForUser(userId, domainId);
+  } catch (e) {
+    return dbFailureBody(e);
+  }
   try {
     const ok = await deleteDomainForUser(domainId, userId);
     if (!ok) return notFound();

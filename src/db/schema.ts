@@ -118,6 +118,38 @@ export const domains = pgTable(
   (t) => [unique("domains_userId_hostname_unique").on(t.userId, t.hostname)]
 );
 
+/**
+ * User-scoped server inventory (Hetzner, Contabo, AWS EC2, etc.).
+ * Metadata only - no secrets or credentials.
+ */
+export const infrastructureServers = pgTable("infrastructure_servers", {
+  id: text("id").primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  /** Short provider key or label, e.g. hetzner, aws_ec2, contabo */
+  provider: text("provider").notNull(),
+  region: text("region"),
+  /** Display name for this machine */
+  name: text("name").notNull(),
+  role: text("role"),
+  environment: text("environment"),
+  notes: text("notes"),
+  /** HTTPS link to provider console or dashboard */
+  consoleUrl: text("consoleUrl"),
+  /** Link to internal runbook or wiki */
+  runbookUrl: text("runbookUrl"),
+  tags: jsonb("tags").$type<string[]>().notNull().default([]),
+  /** Portfolio domain ids (same user); validated on write */
+  linkedDomainIds: jsonb("linkedDomainIds").$type<string[]>().notNull().default([]),
+  createdAt: timestamp("createdAt", { mode: "date", precision: 3 })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date", precision: 3 })
+    .notNull()
+    .defaultNow(),
+});
+
 export const authSchema = {
   user,
   session,
