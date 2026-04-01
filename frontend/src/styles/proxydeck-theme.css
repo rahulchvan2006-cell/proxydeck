@@ -1,61 +1,115 @@
 /**
- * ProxyDeck : "The Kinetic Infrastructure" design system
+ * ProxyDeck - Neobrutalism design system
+ * Bold ink, flat color, hard offset shadows, chunky type (on top of Oat).
  */
 
 /* -------------------------------------------------------------------------- */
-/* Design tokens → Oat semantic map (dark command-console only)               */
+/* Tokens: map Oat semantic vars + ProxyDeck pd-* aliases                     */
 /* -------------------------------------------------------------------------- */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --pd-surface: #0b1326;
-  --pd-surface-container-low: #131b2e;
-  --pd-surface-container: #171f33;
-  --pd-surface-container-high: #222a3d;
-  --pd-surface-container-highest: #2a3347;
-  --pd-surface-container-lowest: #060e20;
-  --pd-on-surface: #dae2fd;
-  --pd-on-surface-variant: #c1c6d7;
-  --pd-primary-tint: #adc6ff;
-  --pd-primary-container: #4b8eff;
-  --pd-on-primary: #f0f4ff;
-  --pd-outline-variant: #414755;
+  --nb-ink: #0a0a0a;
+  --nb-paper: #f4ecd8;
+  --nb-panel: #fff8e8;
+  --nb-panel-deep: #e8dcc4;
+  --nb-panel-muted: #ddd2bc;
+  --nb-yellow: #ffe600;
+  --nb-magenta: #ff2d6a;
+  --nb-cyan: #00d4ff;
+  --nb-lime: #b8ff2c;
+  /* One default “raised” depth for cards + buttons; larger only for floating layers (drawer). */
+  --nb-raise: 4px 4px 0 var(--nb-ink);
+  --nb-shadow-x: 4px;
+  --nb-shadow-y: 4px;
+  --nb-shadow: var(--nb-raise);
+  --nb-shadow-sm: var(--nb-raise);
+  --nb-shadow-pressed: 2px 2px 0 var(--nb-ink);
+  --nb-border-w: 3px;
+  /* Text on bright accents (yellow header row, lime badges) — stays black in both themes. */
+  --nb-on-accent-pop: #0a0a0a;
 
-  --background: var(--pd-surface);
-  --foreground: var(--pd-on-surface);
-  --card: var(--pd-surface-container);
-  --card-foreground: var(--pd-on-surface);
-  --primary: var(--pd-primary-container);
-  --primary-foreground: var(--pd-on-primary);
-  --secondary: var(--pd-surface-container-high);
-  --secondary-foreground: var(--pd-on-surface);
-  --muted: var(--pd-surface-container-low);
-  --muted-foreground: var(--pd-on-surface-variant);
-  --faint: var(--pd-surface-container-lowest);
-  --faint-foreground: #8b92a8;
-  --accent: color-mix(in srgb, var(--pd-surface-container-high) 85%, var(--pd-surface));
-  --danger: #ffb4ab;
-  --danger-foreground: #1a0c0c;
-  --success: #4edea3;
-  --success-foreground: #00311f;
-  --warning: #ffb95f;
-  --warning-foreground: #3e2400;
-  --border: color-mix(in srgb, var(--pd-outline-variant) 20%, transparent);
-  --input: color-mix(in srgb, var(--pd-outline-variant) 35%, transparent);
-  --ring: var(--pd-primary-tint);
+  --background: var(--nb-paper);
+  --foreground: var(--nb-ink);
+  --card: var(--nb-panel);
+  --card-foreground: var(--nb-ink);
+  --primary: var(--nb-yellow);
+  --primary-foreground: var(--nb-ink);
+  --secondary: var(--nb-panel-deep);
+  --secondary-foreground: var(--nb-ink);
+  --muted: var(--nb-panel-muted);
+  --muted-foreground: #3d3a34;
+  --faint: #efe6d4;
+  --faint-foreground: #5c574d;
+  --accent: var(--nb-lime);
+  --danger: #e63946;
+  --danger-foreground: #fffef8;
+  --success: #0a8f4d;
+  --success-foreground: #f6fff4;
+  --warning: #ff9f1c;
+  --warning-foreground: var(--nb-ink);
+  --border: var(--nb-ink);
+  --input: var(--nb-ink);
+  --ring: var(--nb-magenta);
 
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --pd-surface: var(--nb-paper);
+  --pd-surface-container-low: var(--nb-panel-deep);
+  --pd-surface-container: var(--nb-panel);
+  --pd-surface-container-high: #f0e4cc;
+  --pd-surface-container-highest: #e5d9be;
+  --pd-surface-container-lowest: #fffef6;
+  --pd-on-surface: var(--nb-ink);
+  --pd-on-surface-variant: #3d3a34;
+  /* In-content text links (not “hyperlink blue”). */
+  --pd-link: var(--nb-ink);
+  /* Accent for focus rings / small highlights - not default link color. */
+  --pd-primary-tint: var(--nb-magenta);
+  --pd-primary-container: var(--nb-yellow);
+  --pd-on-primary: var(--nb-ink);
+  --pd-outline-variant: var(--nb-ink);
+
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-display: "Syne", "DM Sans", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
 
-  --space-12: 2.75rem;
+  --radius-small: 2px;
+  --radius-medium: 4px;
+  --radius-large: 6px;
 
-  --shadow-pd-ambient: 0 8px 24px color-mix(in srgb, var(--pd-primary-tint) 8%, transparent);
+  --shadow-small: var(--nb-raise);
+  --shadow-medium: var(--nb-raise);
+  --shadow-large: 8px 8px 0 var(--nb-ink);
+
+  --shadow-pd-ambient: var(--nb-shadow);
+
+  --transition-fast: 100ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* “Paper + trace lines” — shared by app shell and auth (minimal neo texture). */
+  --pd-pattern-angle: -12deg;
+  --pd-pattern-stripe-step: 14px;
+  --pd-pattern-stripe-w: 1px;
+  --pd-pattern-ink: color-mix(in srgb, var(--nb-ink) 3.25%, transparent);
+  --pd-page-pattern: repeating-linear-gradient(
+    var(--pd-pattern-angle),
+    transparent 0,
+    transparent calc(var(--pd-pattern-stripe-step) - var(--pd-pattern-stripe-w)),
+    var(--pd-pattern-ink) calc(var(--pd-pattern-stripe-step) - var(--pd-pattern-stripe-w)),
+    var(--pd-pattern-ink) var(--pd-pattern-stripe-step)
+  );
+}
+
+/* Unlayered: beat Oat @layer utilities */
+.text-light {
+  color: var(--muted-foreground);
+}
+
+.text-lighter {
+  color: var(--faint-foreground);
 }
 
 /* -------------------------------------------------------------------------- */
-/* Typography : display vs UI vs data                                         */
+/* Typography                                                                 */
 /* -------------------------------------------------------------------------- */
 
 h1,
@@ -63,41 +117,152 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  font-weight: 800;
 }
 
 h5,
 h6 {
   font-family: var(--font-sans);
+  font-weight: 700;
+}
+
+/* Page titles: strong but not ultra-wide display - reads better with data tables. */
+.pd-page-header h1 {
+  font-family: var(--font-sans);
+  font-size: clamp(1.5rem, 1.2rem + 0.9vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-block: 0 var(--space-2);
+}
+
+.pd-section-title {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.pd-page-header__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.pd-page-header__intro {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+
+.pd-page-header__lede {
+  margin-block: 0 var(--space-3);
+  max-width: 40rem;
+}
+
+.pd-page-header__action {
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+/* Config: primary jump to Sites (full button chrome, not stripped by a.unstyled). */
+.pd-config-sites-cta {
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* Auth screens sit outside `.pd-oat-main-inner`; match main link styling. */
+.pd-auth-shell a[href]:not(.button) {
+  color: var(--pd-link);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--nb-ink);
+}
+
+.pd-auth-shell a[href]:not(.button):hover {
+  color: var(--primary-foreground);
+  text-decoration: none;
+  background-color: var(--nb-lime);
+  box-shadow: 2px 2px 0 var(--nb-on-accent-pop);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0.08em 0.2em;
 }
 
 /* -------------------------------------------------------------------------- */
-/* Layout: no-line sidebar / top bar (tonal boundaries only)                    */
+/* Layout: sidebar / top bar                                                  */
 /* -------------------------------------------------------------------------- */
 
 .pd-sidebar-layout > aside[data-sidebar] {
   background-color: var(--pd-surface-container-low);
-  border-inline-end: none;
+  border-inline-end: var(--nb-border-w) solid var(--nb-ink);
   box-shadow: none;
 }
 
 .pd-sidebar-layout > nav[data-topnav] {
   background-color: var(--pd-surface-container-low);
-  border-bottom: none;
+  border-bottom: var(--nb-border-w) solid var(--nb-ink);
   box-shadow: none;
 }
 
-.pd-sidebar-layout aside details {
-  border: none;
+.pd-sidebar-layout aside[data-sidebar] nav a {
+  border: var(--nb-border-w) solid transparent;
+  box-sizing: border-box;
 }
 
-.pd-sidebar-layout aside details[open] summary,
-.pd-sidebar-layout aside summary {
-  border-bottom: none;
+.pd-sidebar-layout aside[data-sidebar] nav a:hover,
+.pd-sidebar-layout aside[data-sidebar] nav summary:hover {
+  background-color: var(--nb-lime);
+  color: var(--primary-foreground);
+}
+
+/* Raised item; shadow strength tuned in LayoutOat so it doesn’t crowd the rail edge. */
+.pd-sidebar-layout aside[data-sidebar] nav a[aria-current="page"] {
+  background-color: var(--nb-yellow);
+  color: var(--primary-foreground);
+  font-weight: 800;
+  border-color: var(--nb-on-accent-pop);
+  outline: none;
+}
+
+.pd-sidebar-layout aside details summary {
+  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--pd-on-surface-variant);
 }
 
 .pd-oat-main-inner {
   padding: var(--space-12) var(--space-6);
+}
+
+.pd-oat-main-inner a[href]:not(.button):not(.unstyled):not(.card):not(.pd-breadcrumbs__link) {
+  color: var(--pd-link);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--nb-ink);
+  transition:
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.pd-oat-main-inner a[href]:not(.button):not(.unstyled):not(.card):not(.pd-breadcrumbs__link):hover {
+  color: var(--primary-foreground);
+  text-decoration: none;
+  background-color: var(--nb-lime);
+  box-shadow: 2px 2px 0 var(--nb-on-accent-pop);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0.08em 0.2em;
+  margin: 0 -0.05em;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -105,12 +270,13 @@ h6 {
 /* -------------------------------------------------------------------------- */
 
 .card {
-  background-color: var(--pd-surface-container);
-  border: none;
-  box-shadow: none;
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border: var(--nb-border-w) solid var(--nb-ink);
+  border-radius: var(--radius-medium);
+  box-shadow: var(--nb-shadow);
 }
 
-/* Oat `.row` grid: four `col-3` tiles on wide viewports; see breakpoint overrides below. */
 .pd-quick-actions.row {
   align-items: stretch;
 }
@@ -124,119 +290,180 @@ h6 {
 /* Tailwind-style elevated cards: Oat `.card` + tokens. Never pair `unstyled` on links - Oat zeros anchor padding. */
 a.card.pd-action-card {
   text-decoration: none;
-  color: inherit;
+  color: var(--foreground);
   height: 100%;
   min-height: 6.75rem;
   padding: var(--space-6);
-  background-color: var(--pd-surface-container);
-  border: 1px solid color-mix(in srgb, var(--pd-outline-variant) 45%, transparent);
+  background-color: var(--card);
+  border: var(--nb-border-w) solid var(--nb-ink);
   border-radius: var(--radius-medium);
-  box-shadow: var(--shadow-small);
+  box-shadow: var(--nb-shadow);
   transition:
-    background-color var(--transition-fast),
-    border-color var(--transition-fast),
+    transform var(--transition-fast),
     box-shadow var(--transition-fast),
-    transform var(--transition-fast);
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
 a.card.pd-action-card:hover {
-  background-color: var(--pd-surface-container-high);
-  border-color: color-mix(in srgb, var(--pd-primary-tint) 35%, var(--pd-outline-variant));
-  box-shadow: var(--shadow-medium), var(--shadow-pd-ambient);
-  transform: translateY(-2px);
+  background-color: var(--nb-lime);
+  color: var(--primary-foreground);
+  transform: translate(-2px, -2px);
+  box-shadow: calc(var(--nb-shadow-x) + 2px) calc(var(--nb-shadow-y) + 2px) 0 var(--nb-on-accent-pop);
+}
+
+a.card.pd-action-card:hover .text-light {
+  color: color-mix(in srgb, var(--primary-foreground) 68%, transparent);
+}
+
+a.card.pd-action-card:hover h3 {
+  color: var(--primary-foreground);
 }
 
 a.card.pd-action-card:active {
-  transform: translateY(0);
-  box-shadow: var(--shadow-small);
+  transform: translate(2px, 2px);
+  box-shadow: var(--nb-shadow-pressed);
 }
 
 a.card.pd-action-card:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
+  outline: var(--nb-border-w) solid var(--ring);
+  outline-offset: 3px;
 }
 
 a.card.pd-action-card h3 {
   margin: 0;
   font-size: var(--text-3);
-  font-weight: var(--font-semibold);
+  font-weight: 800;
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
-  line-height: 1.3;
-  color: var(--pd-on-surface);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: inherit;
 }
 
 a.card.pd-action-card p {
   margin: 0;
   flex: 1;
   font-size: calc(var(--text-8) * 0.88);
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 /* -------------------------------------------------------------------------- */
-/* Primary actions : lithographic gradient + tactile top highlight            */
+/* Buttons                                                                    */
 /* -------------------------------------------------------------------------- */
 
-/* Unlayered so it wins over Oat @layer base */
 :is(button, [type="submit"], [type="reset"], [type="button"], a.button):not(.outline):not(.ghost):not([data-variant="secondary"]):not(
     [data-variant="danger"]
   ) {
-  background: linear-gradient(135deg, var(--pd-primary-tint) 0%, var(--pd-primary-container) 100%);
-  color: var(--pd-on-primary);
-  border-color: transparent;
-  box-shadow: inset 0 1px 0 0 color-mix(in srgb, #e8f0ff 45%, transparent);
+  background: var(--nb-yellow);
+  color: var(--primary-foreground);
+  border: var(--nb-border-w) solid var(--nb-on-accent-pop);
+  border-radius: var(--radius-medium);
+  box-shadow: var(--nb-shadow-sm);
+  font-weight: 700;
 }
 
 :is(button, [type="submit"], [type="reset"], [type="button"], a.button):not(.outline):not(.ghost):not([data-variant="secondary"]):not(
     [data-variant="danger"]
   ):hover:not(:disabled) {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--pd-primary-tint) 88%, white) 0%,
-    color-mix(in srgb, var(--pd-primary-container) 88%, white) 100%
-  );
+  background: var(--nb-lime);
+  color: var(--primary-foreground);
+  border-color: var(--nb-on-accent-pop);
+  filter: none;
+}
+
+:is(button, [type="submit"], [type="reset"], [type="button"], a.button):not(.outline):not(.ghost):not([data-variant="secondary"]):not(
+    [data-variant="danger"]
+  ):active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: var(--nb-shadow-pressed);
 }
 
 :is(button, [type="submit"], [type="reset"], [type="button"], a.button).outline:not([data-variant="danger"]) {
-  border-color: color-mix(in srgb, #8b90a0 30%, transparent);
-  color: var(--pd-primary-tint);
+  border: var(--nb-border-w) solid var(--border);
+  color: var(--foreground);
+  background-color: var(--card);
+  box-shadow: var(--nb-shadow-sm);
+  font-weight: 700;
 }
 
 :is(button, [type="submit"], [type="reset"], [type="button"], a.button).outline:not([data-variant="danger"]):hover:not(:disabled) {
-  color: var(--pd-primary-tint);
-  background-color: color-mix(in srgb, var(--pd-primary-container) 12%, transparent);
+  background-color: var(--nb-cyan);
+  color: var(--primary-foreground);
+  border-color: var(--nb-on-accent-pop);
+}
+
+:is(button, [type="submit"], [type="reset"], [type="button"], a.button).outline:not([data-variant="danger"]):active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: var(--nb-shadow-pressed);
+}
+
+:is(button, [type="submit"], [type="reset"], [type="button"], a.button).outline[data-variant="danger"] {
+  border: var(--nb-border-w) solid var(--danger);
+  color: var(--danger);
+  background-color: var(--card);
+  box-shadow: var(--nb-shadow-sm);
+  font-weight: 700;
+}
+
+:is(button, [type="submit"], [type="reset"], [type="button"], a.button).outline[data-variant="danger"]:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--danger) 12%, var(--card));
+}
+
+:is(button, [type="submit"], [type="reset"], [type="button"], a.button).outline[data-variant="danger"]:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: var(--nb-shadow-pressed);
+}
+
+:is(button, [type="submit"], [type="reset"], [type="button"], a.button)[data-variant="danger"] {
+  background: var(--danger);
+  color: var(--danger-foreground);
+  border: var(--nb-border-w) solid var(--nb-on-accent-pop);
+  box-shadow: var(--nb-shadow-sm);
+  font-weight: 700;
+}
+
+:is(button, [type="submit"], [type="reset"], [type="button"], a.button)[data-variant="danger"]:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+:is(button, [type="submit"], [type="reset"], [type="button"], a.button)[data-variant="danger"]:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: var(--nb-shadow-pressed);
 }
 
 /* -------------------------------------------------------------------------- */
-/* Badges : signal system + technical corners                                 */
+/* Badges                                                                     */
 /* -------------------------------------------------------------------------- */
 
 .badge {
   border-radius: var(--radius-small);
+  border: 2px solid var(--nb-ink);
+  font-weight: 700;
+  box-shadow: 2px 2px 0 var(--nb-ink);
 }
 
 .badge.secondary {
-  background-color: color-mix(in srgb, var(--pd-surface-container-high) 80%, transparent);
-  color: var(--pd-on-surface-variant);
+  background-color: var(--secondary);
+  color: var(--secondary-foreground);
 }
 
 .badge.pd-signal-active {
-  color: #4edea3;
-  background-color: #00311f;
+  color: var(--nb-on-accent-pop);
+  background-color: var(--nb-lime);
 }
 
 .badge.pd-signal-warning {
-  color: #ffb95f;
-  background-color: #3e2400;
+  color: var(--nb-on-accent-pop);
+  background-color: var(--warning);
 }
 
 .badge.pd-signal-critical {
-  color: #ffb4ab;
-  background-color: #93000a;
+  color: #fffef8;
+  background-color: var(--danger);
 }
 
 /* -------------------------------------------------------------------------- */
-/* Code / logs : data layer                                                   */
+/* Code / logs                                                                */
 /* -------------------------------------------------------------------------- */
 
 .pd-code-block-scroll {
@@ -252,12 +479,13 @@ pre.pd-code-block {
   font-family: var(--font-mono);
   font-size: var(--text-7);
   line-height: 1.55;
-  color: var(--pd-on-surface-variant);
+  color: var(--pd-on-surface);
   background-color: var(--pd-surface-container-lowest);
   border-radius: var(--radius-medium);
-  border: none;
-  border-left: 2px solid var(--pd-primary-tint);
-  box-shadow: none;
+  border: var(--nb-border-w) solid var(--nb-ink);
+  border-left-width: 6px;
+  border-left-color: var(--nb-magenta);
+  box-shadow: var(--nb-shadow-sm);
 }
 
 .pd-code-block code,
@@ -270,12 +498,16 @@ pre.pd-code-block code {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Gridless tables                                                            */
+/* Tables                                                                     */
 /* -------------------------------------------------------------------------- */
 
 .pd-table-gridless table {
   border-collapse: separate;
   border-spacing: 0;
+  border: var(--nb-border-w) solid var(--nb-ink);
+  border-radius: var(--radius-medium);
+  overflow: hidden;
+  box-shadow: var(--nb-shadow-sm);
 }
 
 .pd-table-gridless thead {
@@ -284,25 +516,35 @@ pre.pd-code-block code {
 
 .pd-table-gridless thead th {
   padding: 0.9rem var(--space-3);
-  font-weight: var(--font-medium);
-  color: var(--pd-on-surface-variant);
-  background-color: var(--pd-surface-container-highest);
+  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: var(--text-7);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nb-on-accent-pop);
+  background-color: var(--nb-yellow);
   border: none;
+  border-bottom: var(--nb-border-w) solid var(--nb-on-accent-pop);
 }
 
 .pd-table-gridless tbody tr {
-  border-bottom: none;
+  border-bottom: 2px solid var(--nb-ink);
   transition: background-color var(--transition-fast);
+}
+
+.pd-table-gridless tbody tr:last-child {
+  border-bottom: none;
 }
 
 .pd-table-gridless tbody td {
   padding: 0.9rem var(--space-3);
   vertical-align: top;
   border: none;
+  background-color: var(--card);
 }
 
-.pd-table-gridless tbody tr:hover {
-  background-color: color-mix(in srgb, white 5%, transparent);
+.pd-table-gridless tbody tr:hover td {
+  background-color: color-mix(in srgb, var(--nb-cyan) 35%, var(--card));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -310,7 +552,7 @@ pre.pd-code-block code {
 /* -------------------------------------------------------------------------- */
 
 .pd-page-header {
-  margin-block-end: var(--space-12);
+  margin-block-end: var(--space-8);
 }
 
 .pd-section-stack {
@@ -324,7 +566,8 @@ pre.pd-code-block code {
   align-items: center;
   justify-content: center;
   padding: var(--space-6);
-  background: var(--pd-surface);
+  background-color: var(--pd-surface);
+  background-image: var(--pd-page-pattern);
 }
 
 .pd-auth-version {
@@ -336,7 +579,7 @@ pre.pd-code-block code {
 .pd-stack-divider {
   margin-block-start: var(--space-6);
   padding-block-start: var(--space-6);
-  border: none;
+  border-block-start: var(--nb-border-w) dashed var(--nb-ink);
 }
 
 .pd-site-list {
@@ -355,59 +598,126 @@ pre.pd-code-block code {
 .pd-footer-actions {
   padding-block-start: var(--space-6);
   margin-block-start: var(--space-6);
-  border: none;
+  border-block-start: var(--nb-border-w) solid var(--nb-ink);
 }
 
 .pd-route-group {
   padding-block-start: var(--space-4);
   margin-block-start: var(--space-4);
-  border: none;
+  border-block-start: var(--nb-border-w) dashed color-mix(in srgb, var(--nb-ink) 45%, transparent);
 }
 
 .pd-history-row {
   align-items: center;
   padding: var(--space-3) var(--space-4);
-  background-color: var(--pd-surface-container-low);
+  background-color: var(--card);
+  border: var(--nb-border-w) solid var(--nb-ink);
   border-radius: var(--radius-medium);
+  box-shadow: var(--nb-shadow-sm);
 }
 
 .pd-status-connected {
   color: var(--success);
-  font-weight: 500;
+  font-weight: 800;
+  font-family: var(--font-sans);
 }
 
 .pd-status-idle {
   color: var(--muted-foreground);
-  font-weight: 500;
+  font-weight: 700;
 }
 
-/* Inputs on dark surfaces */
+/* Inputs */
 :where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="color"]), textarea, select) {
-  background-color: var(--pd-surface-container-lowest);
-  color: var(--pd-on-surface);
+  background-color: var(--card);
+  color: var(--foreground);
+  border: var(--nb-border-w) solid var(--nb-ink);
+  border-radius: var(--radius-medium);
+  box-shadow: inset 2px 2px 0 color-mix(in srgb, var(--nb-ink) 8%, transparent);
 }
 
-/* Alerts: softer containment without heavy outlines */
+:where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="color"]), textarea, select):focus {
+  box-shadow:
+    inset 2px 2px 0 color-mix(in srgb, var(--nb-ink) 8%, transparent),
+    0 0 0 3px var(--nb-cyan);
+  border-color: var(--nb-ink);
+}
+
+/* Alerts */
 [role="alert"][data-variant="success"],
 [role="alert"][data-variant="danger"] {
-  border: none;
+  border: var(--nb-border-w) solid var(--nb-ink);
+  border-radius: var(--radius-medium);
+  box-shadow: var(--nb-shadow-sm);
+  font-weight: 600;
+}
+
+[role="alert"][data-variant="success"] {
+  background-color: color-mix(in srgb, var(--success) 22%, var(--card));
+  color: var(--foreground);
+}
+
+[role="alert"][data-variant="danger"] {
+  background-color: color-mix(in srgb, var(--danger) 18%, var(--card));
+  color: var(--foreground);
 }
 
 .pd-app-root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--pd-surface);
+  background-color: var(--pd-surface);
+  background-image: var(--pd-page-pattern);
 }
 
-.pd-page-header h1,
+/* Main reading column: optional second layer (dot rhythm) — keeps sidebar solid, adds depth. */
+.pd-sidebar-layout > main.pd-oat-main {
+  background-color: transparent;
+  background-image: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--nb-ink) 2.75%, transparent) 0.55px,
+    transparent 0.6px
+  );
+  background-size: 22px 22px;
+  background-position: 0 0;
+}
+
+@media (prefers-contrast: more) {
+  .pd-app-root,
+  .pd-auth-shell,
+  .pd-sidebar-layout > main.pd-oat-main {
+    background-image: none;
+  }
+}
+
+@media print {
+  .pd-app-root,
+  .pd-auth-shell,
+  .pd-sidebar-layout > main.pd-oat-main {
+    background-image: none;
+  }
+}
+
 .pd-auth-shell h1 {
   margin-block-start: 0;
 }
 
 [data-sidebar-toggle] {
-  border-color: color-mix(in srgb, var(--pd-outline-variant) 25%, transparent);
-  background-color: transparent;
+  border: var(--nb-border-w) solid var(--nb-ink);
+  background-color: var(--card);
+  box-shadow: var(--nb-shadow-sm);
+  font-weight: 800;
+  border-radius: var(--radius-medium);
+}
+
+[data-sidebar-toggle]:hover {
+  background-color: var(--nb-yellow);
+  color: var(--primary-foreground);
+}
+
+[data-sidebar-toggle]:active {
+  transform: translate(2px, 2px);
+  box-shadow: var(--nb-shadow-pressed);
 }
 
 .pd-mono,
@@ -421,16 +731,17 @@ pre.pd-code-block code {
   z-index: 200;
   max-width: min(26rem, 100vw - 2rem);
   margin: auto;
-  border: 1px solid color-mix(in srgb, var(--pd-outline-variant) 45%, transparent);
 }
 
 .pd-confirm-dialog::backdrop {
-  background: color-mix(in srgb, var(--pd-surface) 55%, #000);
+  background: color-mix(in srgb, var(--nb-ink) 55%, transparent);
 }
 
 .pd-confirm-dialog form > header h3 {
   margin-block: 0 0.35rem;
   font-size: var(--text-3);
+  font-family: var(--font-display);
+  font-weight: 800;
 }
 
 /* Oat <dialog> for multi-field forms (add domain, server, site, …) */

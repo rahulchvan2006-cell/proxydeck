@@ -177,7 +177,7 @@ export function Servers() {
       <OatFormModal
         ref={serverModalRef}
         title={editingId ? "Edit server" : "Add server"}
-        description="Metadata only—do not store passwords or API keys. Console and runbook links must use https."
+        description="Metadata only-do not store passwords or API keys. Console and runbook links must use https."
         onClose={() => {
           setForm(emptyForm());
           setEditingId(null);
@@ -346,7 +346,7 @@ export function Servers() {
         <h1>Servers</h1>
         <p className="text-light">
           Track Hetzner, Contabo, AWS EC2, and other hosts in one place. Link entries to portfolio domains for
-          context. Store secrets in a password manager—never here.
+          context. Store secrets in a password manager-never here.
         </p>
         <div className="hstack gap-2 mt-4">
           <button

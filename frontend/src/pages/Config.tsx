@@ -1,5 +1,6 @@
 import { useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
+import { PencilSimple } from "@phosphor-icons/react";
 import { ConfirmDialog, type ConfirmDialogHandle } from "../components/ConfirmDialog";
 import { useConfig } from "./hooks/useConfig";
 
@@ -23,8 +24,12 @@ export function Config() {
     return (
       <>
         <header className="pd-page-header">
-          <h1>Config</h1>
-          <p className="text-light">Proxy : preview generated config and rollback history.</p>
+          <div className="pd-page-header__top">
+            <div className="pd-page-header__intro">
+              <h1>Config</h1>
+              <p className="text-light pd-page-header__lede">Preview generated config and rollback history.</p>
+            </div>
+          </div>
         </header>
         <div className="card p-4">
           <p className="text-light align-center p-4">Loading…</p>
@@ -43,15 +48,23 @@ export function Config() {
         onConfirm={confirmRollback}
       />
       <header className="pd-page-header">
-        <h1>Config</h1>
-        <p className="text-light">
-          Proxy : preview of the config that will be applied. Edit and apply from <Link to="/proxy/sites">Sites</Link>.
-        </p>
-        <p className="hstack gap-2 mt-2">
-          <Link to="/proxy/sites" className="button outline small unstyled">
-            Edit & apply on Sites
+        <div className="pd-page-header__top">
+          <div className="pd-page-header__intro">
+            <h1>Config</h1>
+            <p className="text-light pd-page-header__lede">
+              Live preview of the config your proxy will use. Edit hosts, routes, and upstreams on Sites, then apply
+              there.
+            </p>
+          </div>
+          <Link
+            to="/proxy/sites"
+            className="button pd-page-header__action pd-config-sites-cta"
+            style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem" }}
+          >
+            <PencilSimple size={20} weight="duotone" aria-hidden />
+            Edit &amp; apply on Sites
           </Link>
-        </p>
+        </div>
       </header>
       <article className="card">
         {preview.provider ? (

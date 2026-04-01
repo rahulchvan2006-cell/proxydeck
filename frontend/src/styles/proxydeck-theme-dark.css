@@ -1,0 +1,87 @@
+/**
+ * Dark neobrutalism — activated via `html[data-theme="dark"]`.
+ * Inverted chalk borders + cool surfaces; yellow/lime stay loud.
+ */
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* “Chalk” for edges only — never use for text on yellow/lime (use --primary-foreground). */
+  --nb-ink: #d0d0de;
+  --nb-paper: #12121a;
+  --nb-panel: #1a1a24;
+  --nb-panel-deep: #15151e;
+  --nb-panel-muted: #22222e;
+  --nb-yellow: #ffe600;
+  --nb-magenta: #ff4d8a;
+  --nb-cyan: #3de5ff;
+  --nb-lime: #c8ff3d;
+  --nb-on-accent-pop: #0a0a0a;
+
+  --nb-raise: 4px 4px 0 color-mix(in srgb, var(--nb-ink) 72%, transparent);
+  --nb-shadow-x: 4px;
+  --nb-shadow-y: 4px;
+  --nb-shadow: var(--nb-raise);
+  --nb-shadow-sm: var(--nb-raise);
+  --nb-shadow-pressed: 2px 2px 0 color-mix(in srgb, var(--nb-ink) 72%, transparent);
+
+  --background: var(--nb-paper);
+  --foreground: #eaeaf0;
+  --card: var(--nb-panel);
+  --card-foreground: #eaeaf0;
+  --primary: var(--nb-yellow);
+  --primary-foreground: #0a0a0a;
+  --secondary: var(--nb-panel-muted);
+  --secondary-foreground: #eaeaf0;
+  --muted: var(--nb-panel-muted);
+  --muted-foreground: #9a9ab0;
+  --faint: #12121a;
+  --faint-foreground: #7c7c90;
+  --accent: var(--nb-lime);
+  --danger: #ff5c6a;
+  --danger-foreground: #fffef8;
+  --success: #3dd68f;
+  --success-foreground: #041208;
+  --warning: #ffb547;
+  --warning-foreground: #0a0a0a;
+  --border: var(--nb-ink);
+  --input: var(--nb-ink);
+  --ring: var(--nb-magenta);
+
+  --pd-surface: var(--nb-paper);
+  --pd-surface-container-low: var(--nb-panel-deep);
+  --pd-surface-container: var(--nb-panel);
+  --pd-surface-container-high: #22222c;
+  --pd-surface-container-highest: #2c2c38;
+  --pd-surface-container-lowest: #0f0f14;
+  --pd-on-surface: #eaeaf0;
+  --pd-on-surface-variant: #a8a8bc;
+  --pd-link: #f0f0f8;
+  --pd-primary-tint: #7ab8ff;
+  --pd-primary-container: var(--nb-yellow);
+  --pd-on-primary: #0a0a0a;
+  --pd-outline-variant: var(--nb-ink);
+
+  --shadow-small: var(--nb-raise);
+  --shadow-medium: var(--nb-raise);
+  --shadow-large: 8px 8px 0 color-mix(in srgb, var(--nb-ink) 65%, transparent);
+
+  --shadow-pd-ambient: var(--nb-shadow);
+
+  --pd-pattern-ink: color-mix(in srgb, var(--nb-ink) 4.5%, transparent);
+  --pd-page-pattern: repeating-linear-gradient(
+    var(--pd-pattern-angle),
+    transparent 0,
+    transparent calc(var(--pd-pattern-stripe-step) - var(--pd-pattern-stripe-w)),
+    var(--pd-pattern-ink) calc(var(--pd-pattern-stripe-step) - var(--pd-pattern-stripe-w)),
+    var(--pd-pattern-ink) var(--pd-pattern-stripe-step)
+  );
+}
+
+html[data-theme="dark"] .pd-sidebar-layout > main.pd-oat-main {
+  background-image: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--nb-ink) 3.5%, transparent) 0.55px,
+    transparent 0.6px
+  );
+}
