@@ -290,7 +290,7 @@ h6 {
 /* Tailwind-style elevated cards: Oat `.card` + tokens. Never pair `unstyled` on links - Oat zeros anchor padding. */
 a.card.pd-action-card {
   text-decoration: none;
-  color: inherit;
+  color: var(--foreground);
   height: 100%;
   min-height: 6.75rem;
   padding: var(--space-6);
@@ -301,7 +301,8 @@ a.card.pd-action-card {
   transition:
     transform var(--transition-fast),
     box-shadow var(--transition-fast),
-    background-color var(--transition-fast);
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
 a.card.pd-action-card:hover {
@@ -313,6 +314,10 @@ a.card.pd-action-card:hover {
 
 a.card.pd-action-card:hover .text-light {
   color: color-mix(in srgb, var(--primary-foreground) 68%, transparent);
+}
+
+a.card.pd-action-card:hover h3 {
+  color: var(--primary-foreground);
 }
 
 a.card.pd-action-card:active {
@@ -332,7 +337,7 @@ a.card.pd-action-card h3 {
   font-family: var(--font-display);
   letter-spacing: -0.03em;
   line-height: 1.2;
-  color: var(--foreground);
+  color: inherit;
 }
 
 a.card.pd-action-card p {
