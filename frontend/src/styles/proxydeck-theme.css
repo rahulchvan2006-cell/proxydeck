@@ -1,5 +1,5 @@
 /**
- * ProxyDeck — Neobrutalism design system
+ * ProxyDeck - Neobrutalism design system
  * Bold ink, flat color, hard offset shadows, chunky type (on top of Oat).
  */
 
@@ -61,7 +61,7 @@
   --pd-on-surface-variant: #3d3a34;
   /* In-content text links (not “hyperlink blue”). */
   --pd-link: var(--nb-ink);
-  /* Accent for focus rings / small highlights — not default link color. */
+  /* Accent for focus rings / small highlights - not default link color. */
   --pd-primary-tint: var(--nb-magenta);
   --pd-primary-container: var(--nb-yellow);
   --pd-on-primary: var(--nb-ink);
@@ -112,7 +112,7 @@ h6 {
   font-weight: 700;
 }
 
-/* Page titles: strong but not ultra-wide display — reads better with data tables. */
+/* Page titles: strong but not ultra-wide display - reads better with data tables. */
 .pd-page-header h1 {
   font-family: var(--font-sans);
   font-size: clamp(1.5rem, 1.2rem + 0.9vw, 1.85rem);
@@ -197,13 +197,12 @@ h6 {
   color: var(--nb-ink);
 }
 
-/* Same language as cards/buttons: border + offset shadow (no outline). */
+/* Raised item; shadow strength tuned in LayoutOat so it doesn’t crowd the rail edge. */
 .pd-sidebar-layout aside[data-sidebar] nav a[aria-current="page"] {
   background-color: var(--nb-yellow);
   color: var(--nb-ink);
   font-weight: 800;
   border-color: var(--nb-ink);
-  box-shadow: var(--nb-raise);
   outline: none;
 }
 

@@ -3,10 +3,22 @@
  * @see https://oat.ink/components/sidebar/
  */
 
+/* Slightly wider rail so shadows + wordmark don’t crowd the divider (Oat default 14rem). */
+@media (min-width: 769px) {
+  .pd-sidebar-layout[data-sidebar-layout] {
+    grid-template-columns: minmax(15.75rem, 17rem) minmax(0, 1fr);
+  }
+}
+
 @media (min-width: 769px) {
   .pd-sidebar-layout > nav[data-topnav].pd-oat-mobile-topnav {
     display: none;
   }
+}
+
+.pd-sidebar-layout > aside[data-sidebar] {
+  overflow-x: hidden;
+  min-width: 0;
 }
 
 .pd-sidebar-layout > main.pd-oat-main {
@@ -78,9 +90,11 @@
 .pd-sidebar-layout aside[data-sidebar] > header.pd-sidebar-header {
   display: flex;
   justify-content: center;
-  margin-block-end: var(--space-4);
-  padding-block: var(--space-4);
+  margin-block-end: var(--space-3);
+  padding-block: var(--space-3);
   padding-inline: var(--space-3);
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .pd-sidebar-brand {
@@ -88,6 +102,9 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   border-radius: var(--radius-medium, 4px);
   padding: var(--space-2);
   border: var(--nb-border-w, 3px) solid transparent;
@@ -111,19 +128,87 @@
 .pd-sidebar-wordmark {
   display: block;
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-size: clamp(1.05rem, 2vw, 1.28rem);
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1.05;
   color: var(--nb-ink, #0a0a0a);
   max-width: 100%;
+  text-align: center;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   text-transform: uppercase;
+}
+
+/* Nav: gutter before the ink divider so raised items don’t touch it; align groups vertically. */
+.pd-sidebar-layout aside[data-sidebar] > nav {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: calc(100dvh - 11rem);
+  padding-inline: var(--space-3);
+  padding-inline-end: var(--space-4);
+  padding-block: var(--space-2);
+  box-sizing: border-box;
+}
+
+.pd-sidebar-layout aside[data-sidebar] nav > ul > li + li {
+  margin-block-start: var(--space-5);
+}
+
+/* Match section labels to link column (Oat indents `ul` more than `summary`). */
+.pd-sidebar-layout aside[data-sidebar] nav details > ul {
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+}
+
+.pd-sidebar-layout aside[data-sidebar] nav details {
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.pd-sidebar-layout aside[data-sidebar] nav details > summary {
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3) var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 2.25rem;
+  box-sizing: border-box;
+  list-style: none;
+  cursor: pointer;
+}
+
+.pd-sidebar-layout aside[data-sidebar] nav details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.pd-sidebar-layout aside[data-sidebar] nav details > ul > li > a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3) var(--space-2);
+  min-height: 2.25rem;
+}
+
+/* Lighter lift inside the rail so shadows don’t read as “into” the divider. */
+.pd-sidebar-layout aside[data-sidebar] nav a[aria-current="page"] {
+  box-shadow: 2px 2px 0 var(--nb-ink, #0a0a0a);
 }
 
 .pd-sidebar-layout aside[data-sidebar] footer {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  flex-shrink: 0;
+  margin-block-start: var(--space-4);
+  padding-inline: var(--space-3);
+  padding-block-end: var(--space-3);
 }
 
 .pd-sidebar-layout aside[data-sidebar] footer .pd-sidebar-version {
