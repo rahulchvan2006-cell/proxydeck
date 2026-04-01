@@ -1,18 +1,21 @@
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { Plus } from "@phosphor-icons/react";
 import type { Domain } from "../../types/domain";
+import type { AddDomainModalHandle } from "./AddDomainModal";
+import { AddDomainModal } from "./AddDomainModal";
 import { useDomains } from "../hooks/useDomains";
 
 function formatDate(iso: string | null): string {
-  if (!iso) return "—";
+  if (!iso) return "-";
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "-";
   return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 }
 
 function tlsValidTo(d: Domain): string {
   const v = d.enrichment?.ssl?.validTo;
-  if (!v) return "—";
+  if (!v) return "-";
   const dt = new Date(v);
   if (Number.isNaN(dt.getTime())) return v;
   return dt.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
@@ -20,6 +23,7 @@ function tlsValidTo(d: Domain): string {
 
 export function DomainList() {
   const { domains, loading, error } = useDomains();
+  const addDomainModalRef = useRef<AddDomainModalHandle>(null);
 
   if (loading) {
     return (
@@ -43,21 +47,22 @@ export function DomainList() {
 
   return (
     <>
+      <AddDomainModal ref={addDomainModalRef} />
       <header className="pd-page-header">
-        <div className="pd-page-header__top">
-          <div className="pd-page-header__intro">
-            <h1>Domains</h1>
-            <p className="text-light pd-page-header__lede">
-              Your domain portfolio (separate from proxy site configuration).
-            </p>
-          </div>
-          <Link
-            to="/domains/new"
-            className="button pd-page-header__action"
+        <h1>Domains</h1>
+        <p className="text-light">Your domain portfolio (separate from proxy site configuration).</p>
+        <div className="hstack gap-2 mt-4">
+          <button
+            type="button"
+            className="button"
             style={{ display: "inline-flex", alignItems: "center", gap: "0.35rem" }}
+            onClick={() => addDomainModalRef.current?.showModal()}
           >
             <Plus size={20} weight="duotone" aria-hidden />
             Add domain
+          </button>
+          <Link to="/domains/servers" className="outline button">
+            Servers
           </Link>
         </div>
       </header>
@@ -75,7 +80,15 @@ export function DomainList() {
         {domains.length === 0 ? (
           <p className="text-light" style={{ marginBlockEnd: 0 }}>
             No domains yet.{" "}
-            <Link to="/domains/new">Add your first domain</Link>.
+            <button
+              type="button"
+              className="unstyled"
+              style={{ color: "var(--pd-primary-tint)", textDecoration: "underline", cursor: "pointer" }}
+              onClick={() => addDomainModalRef.current?.showModal()}
+            >
+              Add your first domain
+            </button>
+            .
           </p>
         ) : (
           <div className="table pd-table-gridless" style={{ overflowX: "auto" }}>
@@ -95,7 +108,7 @@ export function DomainList() {
                     <td>
                       <Link to={`/domains/${d.id}`}>{d.hostname}</Link>
                     </td>
-                    <td>{d.registrarName ?? "—"}</td>
+                    <td>{d.registrarName ?? "-"}</td>
                     <td>{formatDate(d.expiresAt)}</td>
                     <td>{tlsValidTo(d)}</td>
                     <td>
