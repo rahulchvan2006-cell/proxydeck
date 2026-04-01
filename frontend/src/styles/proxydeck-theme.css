@@ -82,6 +82,19 @@
   --shadow-pd-ambient: var(--nb-shadow);
 
   --transition-fast: 100ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* “Paper + trace lines” — shared by app shell and auth (minimal neo texture). */
+  --pd-pattern-angle: -12deg;
+  --pd-pattern-stripe-step: 14px;
+  --pd-pattern-stripe-w: 1px;
+  --pd-pattern-ink: color-mix(in srgb, var(--nb-ink) 3.25%, transparent);
+  --pd-page-pattern: repeating-linear-gradient(
+    var(--pd-pattern-angle),
+    transparent 0,
+    transparent calc(var(--pd-pattern-stripe-step) - var(--pd-pattern-stripe-w)),
+    var(--pd-pattern-ink) calc(var(--pd-pattern-stripe-step) - var(--pd-pattern-stripe-w)),
+    var(--pd-pattern-ink) var(--pd-pattern-stripe-step)
+  );
 }
 
 /* Unlayered: beat Oat @layer utilities */
@@ -537,14 +550,8 @@ pre.pd-code-block code {
   align-items: center;
   justify-content: center;
   padding: var(--space-6);
-  background: var(--pd-surface);
-  background-image: repeating-linear-gradient(
-    -12deg,
-    transparent,
-    transparent 12px,
-    color-mix(in srgb, var(--nb-ink) 4%, transparent) 12px,
-    color-mix(in srgb, var(--nb-ink) 4%, transparent) 13px
-  );
+  background-color: var(--pd-surface);
+  background-image: var(--pd-page-pattern);
 }
 
 .pd-auth-version {
@@ -643,7 +650,36 @@ pre.pd-code-block code {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--pd-surface);
+  background-color: var(--pd-surface);
+  background-image: var(--pd-page-pattern);
+}
+
+/* Main reading column: optional second layer (dot rhythm) — keeps sidebar solid, adds depth. */
+.pd-sidebar-layout > main.pd-oat-main {
+  background-color: transparent;
+  background-image: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--nb-ink) 2.75%, transparent) 0.55px,
+    transparent 0.6px
+  );
+  background-size: 22px 22px;
+  background-position: 0 0;
+}
+
+@media (prefers-contrast: more) {
+  .pd-app-root,
+  .pd-auth-shell,
+  .pd-sidebar-layout > main.pd-oat-main {
+    background-image: none;
+  }
+}
+
+@media print {
+  .pd-app-root,
+  .pd-auth-shell,
+  .pd-sidebar-layout > main.pd-oat-main {
+    background-image: none;
+  }
 }
 
 .pd-auth-shell h1 {
