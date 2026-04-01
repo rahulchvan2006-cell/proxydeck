@@ -1,11 +1,11 @@
 /**
- * Domain detail — minimal surfaces; theme tokens only (no “intel dashboard” chrome).
+ * Domain detail — neobrutalist panels (thick ink, hard shadows).
  */
 
 .pd-domain-detail {
-  --pd-dd-border: color-mix(in srgb, var(--pd-outline-variant) 22%, transparent);
-  --pd-dd-radius: 0.5rem;
-  --pd-dd-radius-lg: 0.625rem;
+  --pd-dd-border: var(--nb-ink, #0a0a0a);
+  --pd-dd-radius: var(--radius-medium, 4px);
+  --pd-dd-radius-lg: var(--radius-large, 6px);
 
   margin-inline: calc(-1 * var(--space-6));
   margin-block-start: calc(-1 * var(--space-4));
@@ -15,7 +15,8 @@
   overflow-x: clip;
 
   background: var(--pd-surface-container-lowest);
-  border: 1px solid var(--pd-dd-border);
+  border: 3px solid var(--pd-dd-border);
+  box-shadow: var(--nb-shadow, 5px 5px 0 #0a0a0a);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -25,7 +26,7 @@
 .pd-domain-detail__hero {
   margin-block-end: clamp(1.25rem, 3vw, 1.75rem);
   padding-block-end: clamp(1rem, 2vw, 1.25rem);
-  border-bottom: 1px solid var(--pd-dd-border);
+  border-bottom: 3px solid var(--pd-dd-border);
 }
 
 .pd-domain-detail__hero-inner {
@@ -53,7 +54,7 @@
   justify-content: center;
   background: var(--pd-surface-container);
   color: var(--pd-on-surface-variant);
-  border: 1px solid var(--pd-dd-border);
+  border: 3px solid var(--pd-dd-border);
 }
 
 .pd-domain-detail__title-text h1 {
@@ -77,12 +78,21 @@
 
 .pd-domain-detail__breadcrumb a {
   color: var(--faint-foreground);
-  text-decoration: none;
-  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+  text-decoration-color: color-mix(in srgb, var(--faint-foreground) 65%, var(--pd-dd-border));
+  font-weight: 600;
 }
 
 .pd-domain-detail__breadcrumb a:hover {
-  color: var(--pd-primary-tint);
+  color: var(--pd-link, var(--nb-ink, #0a0a0a));
+  background-color: var(--nb-lime, #b8ff2c);
+  text-decoration: none;
+  box-shadow: 2px 2px 0 var(--nb-ink, #0a0a0a);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0.08em 0.2em;
 }
 
 .pd-domain-detail__meta {
@@ -106,10 +116,10 @@
   padding: 0.2rem 0.55rem;
   border-radius: var(--pd-dd-radius);
   font-size: calc(var(--text-8) * 0.95);
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.01em;
   text-transform: none;
-  border: 1px solid var(--pd-dd-border);
+  border: 3px solid var(--pd-dd-border);
   background: var(--pd-surface-container);
   color: var(--pd-on-surface-variant);
 }
@@ -140,7 +150,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  font-weight: 500;
+  font-weight: 700;
   font-size: var(--text-7);
   padding: 0.5rem 0.85rem;
   border-radius: var(--pd-dd-radius);
@@ -159,7 +169,7 @@
 .pd-domain-detail__btn-delete {
   background: color-mix(in srgb, var(--danger) 10%, var(--pd-surface-container)) !important;
   color: var(--danger) !important;
-  border: 1px solid color-mix(in srgb, var(--danger) 28%, var(--pd-dd-border)) !important;
+  border: 3px solid color-mix(in srgb, var(--danger) 28%, var(--pd-dd-border)) !important;
 }
 
 .pd-domain-detail__btn-delete:hover:not(:disabled) {
@@ -168,8 +178,11 @@
 
 .pd-domain-detail__btn-visit {
   background: transparent !important;
-  color: var(--pd-primary-tint) !important;
-  border: 1px solid color-mix(in srgb, var(--pd-primary-container) 35%, var(--pd-dd-border)) !important;
+  color: var(--pd-link, var(--nb-ink, #0a0a0a)) !important;
+  border: 3px solid var(--pd-dd-border) !important;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
 }
 
 .pd-domain-detail__btn-visit:hover:not(:disabled) {
@@ -179,7 +192,7 @@
 .pd-domain-detail__btn-edit {
   background: var(--pd-primary-container) !important;
   color: var(--pd-on-primary) !important;
-  border: 1px solid color-mix(in srgb, var(--pd-primary-container) 55%, transparent) !important;
+  border: 3px solid color-mix(in srgb, var(--pd-primary-container) 55%, transparent) !important;
 }
 
 .pd-domain-detail__btn-edit:hover:not(:disabled) {
@@ -189,7 +202,7 @@
 .pd-domain-detail__btn-ghost {
   background: transparent !important;
   color: var(--faint-foreground) !important;
-  border: 1px solid var(--pd-dd-border) !important;
+  border: 3px solid var(--pd-dd-border) !important;
 }
 
 .pd-domain-detail__btn-ghost:hover:not(:disabled) {
@@ -209,8 +222,9 @@
   padding: var(--space-4);
   margin-block-end: var(--space-5);
   border-radius: var(--pd-dd-radius);
-  border: 1px solid var(--pd-dd-border);
+  border: 3px solid var(--pd-dd-border);
   background: var(--pd-surface-container);
+  box-shadow: var(--nb-shadow-sm, 3px 3px 0 #0a0a0a);
 }
 
 .pd-domain-detail__banner--warn {
@@ -280,7 +294,8 @@
   border-radius: var(--pd-dd-radius);
   padding: 1rem 1.1rem;
   min-height: 5.75rem;
-  border: 1px solid var(--pd-dd-border);
+  border: 3px solid var(--pd-dd-border);
+  box-shadow: var(--nb-shadow-sm, 3px 3px 0 #0a0a0a);
 }
 
 @media (min-width: 900px) {
@@ -383,7 +398,7 @@
   font-weight: 500;
   background: color-mix(in srgb, var(--success) 10%, var(--pd-surface-container-lowest));
   color: var(--success);
-  border: 1px solid color-mix(in srgb, var(--success) 22%, var(--pd-dd-border));
+  border: 3px solid color-mix(in srgb, var(--success) 22%, var(--pd-dd-border));
 }
 
 /* DNS tabs — underline, not pill gradient */
@@ -393,7 +408,7 @@
   gap: 0;
   padding: 0;
   margin-block-end: var(--space-3);
-  border-bottom: 1px solid var(--pd-dd-border);
+  border-bottom: 3px solid var(--pd-dd-border);
   background: transparent;
   border-radius: 0;
   box-shadow: none;
@@ -422,6 +437,7 @@
 .pd-domain-detail__dns-tab[aria-selected="true"] {
   color: var(--pd-on-surface);
   border-bottom-color: var(--pd-primary-tint);
+  border-bottom-width: 3px;
   box-shadow: none;
 }
 
@@ -447,7 +463,7 @@
   border-radius: 0;
   background: transparent;
   border: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--pd-dd-border) 85%, transparent);
+  border-bottom: 2px solid color-mix(in srgb, var(--pd-dd-border) 85%, transparent);
   font-family: var(--font-mono);
   font-size: calc(var(--text-7) * 0.96);
 }
@@ -473,7 +489,8 @@
   background: var(--pd-surface-container);
   border-radius: var(--pd-dd-radius-lg);
   padding: clamp(1rem, 2.2vw, 1.35rem);
-  border: 1px solid var(--pd-dd-border);
+  border: 3px solid var(--pd-dd-border);
+  box-shadow: var(--nb-shadow-sm, 3px 3px 0 #0a0a0a);
 }
 
 .pd-domain-detail__hosts-head {
@@ -482,7 +499,7 @@
   gap: var(--space-4);
   margin-block-end: var(--space-4);
   padding-block-end: var(--space-4);
-  border-bottom: 1px solid var(--pd-dd-border);
+  border-bottom: 3px solid var(--pd-dd-border);
 }
 
 .pd-domain-detail__hosts-title {
@@ -525,7 +542,7 @@
   text-transform: none;
   letter-spacing: 0;
   color: var(--faint-foreground);
-  border-bottom: 1px solid var(--pd-dd-border);
+  border-bottom: 3px solid var(--pd-dd-border);
   white-space: nowrap;
   background: transparent;
 }
@@ -542,7 +559,7 @@
 .pd-domain-detail__hosts-table th[scope="row"] {
   padding: 0.75rem;
   vertical-align: top;
-  border-bottom: 1px solid color-mix(in srgb, var(--pd-dd-border) 70%, transparent);
+  border-bottom: 2px solid color-mix(in srgb, var(--pd-dd-border) 70%, transparent);
   color: var(--pd-on-surface-variant);
 }
 
@@ -573,8 +590,9 @@
   margin: 0;
   padding: 0.9rem 1rem;
   border-radius: var(--pd-dd-radius);
-  border: 1px solid var(--pd-dd-border);
+  border: 3px solid var(--pd-dd-border);
   background: var(--pd-surface-container-lowest);
+  box-shadow: var(--nb-shadow-sm, 3px 3px 0 #0a0a0a);
 }
 
 .pd-domain-detail__hosts-card-title {
@@ -605,7 +623,8 @@
   border-radius: var(--pd-dd-radius-lg);
   padding: clamp(1rem, 2.2vw, 1.35rem);
   margin-block-end: var(--space-5);
-  border: 1px solid var(--pd-dd-border);
+  border: 3px solid var(--pd-dd-border);
+  box-shadow: var(--nb-shadow-sm, 3px 3px 0 #0a0a0a);
 }
 
 .pd-domain-detail__panel-head {
@@ -614,7 +633,7 @@
   gap: var(--space-3);
   margin-block-end: var(--space-3);
   padding-block-end: var(--space-3);
-  border-bottom: 1px solid var(--pd-dd-border);
+  border-bottom: 3px solid var(--pd-dd-border);
 }
 
 .pd-domain-detail__panel-head h2 {
@@ -687,7 +706,7 @@
   height: 0.45rem;
   border-radius: 50%;
   background: var(--pd-surface-container);
-  border: 1px solid var(--pd-outline-variant);
+  border: 3px solid var(--pd-outline-variant);
   box-shadow: none;
 }
 
@@ -707,7 +726,7 @@
 .pd-domain-detail__panel-foot {
   margin-block-start: var(--space-3);
   padding-block-start: var(--space-3);
-  border-top: 1px solid var(--pd-dd-border);
+  border-top: 3px solid var(--pd-dd-border);
   font-size: calc(var(--text-8) * 0.98);
   color: var(--faint-foreground);
 }
@@ -716,7 +735,7 @@
   margin-block-end: var(--space-5);
   padding: 1rem 1.1rem;
   border-radius: var(--pd-dd-radius);
-  border: 1px solid var(--pd-dd-border);
+  border: 3px solid var(--pd-dd-border);
   background: var(--pd-surface-container-low);
   font-size: var(--text-7);
   white-space: pre-wrap;
@@ -736,35 +755,39 @@
 /* -------------------------------------------------------------------------- */
 
 .pd-domain-detail__shell {
-  --pd-dd-border: color-mix(in srgb, var(--pd-outline-variant) 28%, transparent);
+  --pd-dd-border: var(--nb-ink, #0a0a0a);
 
   margin-inline: calc(-1 * var(--space-6));
   padding: clamp(1.25rem, 3vw, 2rem);
   border-radius: var(--radius-medium);
   background: var(--pd-surface-container-lowest);
-  border: 1px solid var(--pd-dd-border);
+  border: 3px solid var(--pd-dd-border);
   min-height: 40vh;
 }
 
 .pd-domain-detail__skeleton {
   height: 1.1rem;
-  border-radius: 4px;
-  background: linear-gradient(
-    90deg,
-    var(--pd-surface-container) 0%,
-    var(--pd-surface-container-high) 50%,
-    var(--pd-surface-container) 100%
+  border-radius: var(--radius-small, 2px);
+  border: 2px solid var(--nb-ink, #0a0a0a);
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--pd-surface-container) 0,
+    var(--pd-surface-container) 6px,
+    var(--pd-surface-container-high) 6px,
+    var(--pd-surface-container-high) 12px
   );
-  background-size: 200% 100%;
-  animation: pd-dd-shimmer 1.2s ease-in-out infinite;
+  animation: pd-dd-shimmer 1.4s ease-in-out infinite;
 }
 
 @keyframes pd-dd-shimmer {
   0% {
-    background-position: 100% 0;
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.72;
   }
   100% {
-    background-position: -100% 0;
+    opacity: 1;
   }
 }
 
@@ -783,18 +806,20 @@
 .pd-domain-detail__error-card {
   padding: var(--space-6);
   border-radius: var(--pd-dd-radius-lg);
-  border: 1px solid color-mix(in srgb, var(--danger) 35%, var(--pd-dd-border));
+  border: 3px solid color-mix(in srgb, var(--danger) 35%, var(--pd-dd-border));
   background: color-mix(in srgb, var(--danger) 6%, var(--pd-surface-container-lowest));
   color: var(--danger);
 }
 
 .pd-domain-detail__error-card a {
-  color: var(--pd-primary-tint);
+  color: var(--pd-link, var(--nb-ink, #0a0a0a));
+  font-weight: 700;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .pd-domain-detail__skeleton {
     animation: none;
+    opacity: 1;
     background: var(--pd-surface-container);
   }
 }

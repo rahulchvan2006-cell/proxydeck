@@ -25,8 +25,14 @@ export function DomainList() {
     return (
       <>
         <header className="pd-page-header">
-          <h1>Domains</h1>
-          <p className="text-light">Your domain portfolio (separate from proxy site configuration).</p>
+          <div className="pd-page-header__top">
+            <div className="pd-page-header__intro">
+              <h1>Domains</h1>
+              <p className="text-light pd-page-header__lede">
+                Your domain portfolio (separate from proxy site configuration).
+              </p>
+            </div>
+          </div>
         </header>
         <div className="card p-4">
           <p className="text-light align-center p-4">Loading…</p>
@@ -38,12 +44,16 @@ export function DomainList() {
   return (
     <>
       <header className="pd-page-header">
-        <h1>Domains</h1>
-        <p className="text-light">Your domain portfolio (separate from proxy site configuration).</p>
-        <div className="hstack gap-2 mt-4">
+        <div className="pd-page-header__top">
+          <div className="pd-page-header__intro">
+            <h1>Domains</h1>
+            <p className="text-light pd-page-header__lede">
+              Your domain portfolio (separate from proxy site configuration).
+            </p>
+          </div>
           <Link
             to="/domains/new"
-            className="button"
+            className="button pd-page-header__action"
             style={{ display: "inline-flex", alignItems: "center", gap: "0.35rem" }}
           >
             <Plus size={20} weight="duotone" aria-hidden />
@@ -59,7 +69,7 @@ export function DomainList() {
       )}
 
       <section className="card" aria-labelledby="domain-portfolio-heading">
-        <h2 id="domain-portfolio-heading" className="mb-4" style={{ fontSize: "var(--text-4)" }}>
+        <h2 id="domain-portfolio-heading" className="mb-4 pd-section-title" style={{ fontSize: "var(--text-4)" }}>
           Portfolio
         </h2>
         {domains.length === 0 ? (

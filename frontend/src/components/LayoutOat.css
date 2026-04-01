@@ -1,5 +1,5 @@
 /**
- * Small additions on top of @knadh/oat sidebar patterns.
+ * Sidebar layout additions on top of @knadh/oat.
  * @see https://oat.ink/components/sidebar/
  */
 
@@ -9,7 +9,6 @@
   }
 }
 
-/* Oat base layer adds main padding-block-start; inner wrapper already pads */
 .pd-sidebar-layout > main.pd-oat-main {
   padding-block: 0;
 }
@@ -21,7 +20,6 @@
   box-sizing: border-box;
 }
 
-/* Breadcrumbs (replaces per-page “back” links) */
 .pd-breadcrumbs {
   margin-block-end: var(--space-4);
 }
@@ -35,6 +33,7 @@
   margin: 0;
   padding: 0;
   font-size: var(--text-7, 0.875rem);
+  font-weight: 600;
   color: var(--muted-foreground, var(--pd-on-surface-variant));
 }
 
@@ -47,22 +46,33 @@
 .pd-breadcrumbs__item:not(:last-child)::after {
   content: "/";
   color: var(--faint-foreground, var(--pd-on-surface-variant));
-  opacity: 0.75;
+  font-weight: 800;
   pointer-events: none;
 }
 
 .pd-breadcrumbs__link {
-  color: var(--pd-primary-tint);
-  text-decoration: none;
+  color: var(--pd-link, var(--nb-ink, #0a0a0a));
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--nb-ink, #0a0a0a);
 }
 
 .pd-breadcrumbs__link:hover {
-  text-decoration: underline;
+  color: var(--nb-ink, #0a0a0a);
+  background-color: var(--nb-lime, #b8ff2c);
+  text-decoration: none;
+  box-shadow: 2px 2px 0 var(--nb-ink, #0a0a0a);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0.08em 0.2em;
+  margin: 0 -0.05em;
 }
 
 .pd-breadcrumbs__current {
   color: var(--foreground, var(--pd-on-surface));
-  font-weight: 500;
+  font-weight: 800;
+  font-family: var(--font-sans, system-ui);
 }
 
 .pd-sidebar-layout aside[data-sidebar] > header.pd-sidebar-header {
@@ -78,43 +88,36 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-medium, 4px);
   padding: var(--space-2);
-  transition: background-color var(--transition-fast, 0.15s ease);
+  border: var(--nb-border-w, 3px) solid transparent;
+  transition:
+    background-color var(--transition-fast, 0.1s ease),
+    box-shadow var(--transition-fast, 0.1s ease),
+    transform var(--transition-fast, 0.1s ease);
 }
 
 .pd-sidebar-brand:hover {
-  background-color: color-mix(in srgb, var(--pd-on-surface) 6%, transparent);
+  background-color: var(--nb-yellow, #ffe600);
+  border-color: var(--nb-ink, #0a0a0a);
+  box-shadow: var(--nb-shadow-sm, 3px 3px 0 #0a0a0a);
 }
 
 .pd-sidebar-brand:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
+  outline: var(--nb-border-w, 3px) solid var(--ring);
+  outline-offset: 3px;
 }
 
 .pd-sidebar-wordmark {
   display: block;
   font-family: var(--font-display);
-  font-size: clamp(1.2rem, 2.5vw, 1.45rem);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  line-height: 1.1;
-  color: var(--pd-on-surface);
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--nb-ink, #0a0a0a);
   max-width: 100%;
-}
-
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  .pd-sidebar-wordmark {
-    background: linear-gradient(
-      120deg,
-      var(--pd-primary-tint) 0%,
-      var(--pd-primary-container) 42%,
-      color-mix(in srgb, var(--pd-on-surface) 88%, var(--pd-primary-tint)) 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+  text-transform: uppercase;
 }
 
 .pd-sidebar-layout aside[data-sidebar] footer {
@@ -127,7 +130,7 @@
   margin: 0;
   text-align: center;
   font-size: calc(var(--text-8) * 0.95);
-  opacity: 0.85;
+  font-weight: 600;
 }
 
 .pd-sidebar-layout aside[data-sidebar] footer form {
