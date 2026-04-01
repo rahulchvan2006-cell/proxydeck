@@ -151,6 +151,12 @@ h6 {
   align-self: flex-start;
 }
 
+/* Config: primary jump to Sites (full button chrome, not stripped by a.unstyled). */
+.pd-config-sites-cta {
+  font-weight: 800;
+  white-space: nowrap;
+}
+
 /* Auth screens sit outside `.pd-oat-main-inner`; match main link styling. */
 .pd-auth-shell a[href]:not(.button) {
   color: var(--pd-link);
