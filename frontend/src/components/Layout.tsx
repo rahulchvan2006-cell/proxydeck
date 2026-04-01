@@ -1,5 +1,8 @@
+import { useSyncExternalStore } from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import { Moon, Sun } from "@phosphor-icons/react";
 import { AppVersionStamp } from "./AppVersionStamp";
+import { cyclePdTheme, getPdTheme, subscribeToPdTheme } from "../lib/pdTheme";
 import { BreadcrumbsController } from "./breadcrumbs/BreadcrumbsController";
 import { clearBrowserPersistedState } from "../lib/clearClientState";
 import { signOut } from "../services/auth";
@@ -27,6 +30,7 @@ async function handleLogout(e: React.FormEvent) {
 
 export function Layout() {
   const { layoutRef } = useLayoutSidebar();
+  const theme = useSyncExternalStore(subscribeToPdTheme, getPdTheme, () => "light");
 
   return (
     <div ref={layoutRef} className="pd-sidebar-layout" data-sidebar-layout>
@@ -82,6 +86,20 @@ export function Layout() {
 
         <footer>
           <AppVersionStamp className="text-light pd-sidebar-version" />
+          <button
+            type="button"
+            className="outline small"
+            aria-label={theme === "dark" ? "Use light theme" : "Use dark theme"}
+            onClick={() => cyclePdTheme()}
+            style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.35rem" }}
+          >
+            {theme === "dark" ? (
+              <Sun size={18} weight="duotone" aria-hidden />
+            ) : (
+              <Moon size={18} weight="duotone" aria-hidden />
+            )}
+            {theme === "dark" ? "Light" : "Dark"}
+          </button>
           <button
             type="button"
             className="outline small"

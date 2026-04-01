@@ -86,10 +86,10 @@
 }
 
 .pd-domain-detail__breadcrumb a:hover {
-  color: var(--pd-link, var(--nb-ink, #0a0a0a));
+  color: var(--primary-foreground, #0a0a0a);
   background-color: var(--nb-lime, #b8ff2c);
   text-decoration: none;
-  box-shadow: 2px 2px 0 var(--nb-ink, #0a0a0a);
+  box-shadow: 2px 2px 0 var(--nb-on-accent-pop, #0a0a0a);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   padding: 0.08em 0.2em;

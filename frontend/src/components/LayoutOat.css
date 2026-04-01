@@ -71,10 +71,10 @@
 }
 
 .pd-breadcrumbs__link:hover {
-  color: var(--nb-ink, #0a0a0a);
+  color: var(--primary-foreground, #0a0a0a);
   background-color: var(--nb-lime, #b8ff2c);
   text-decoration: none;
-  box-shadow: 2px 2px 0 var(--nb-ink, #0a0a0a);
+  box-shadow: 2px 2px 0 var(--nb-on-accent-pop, #0a0a0a);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   padding: 0.08em 0.2em;
@@ -116,8 +116,13 @@
 
 .pd-sidebar-brand:hover {
   background-color: var(--nb-yellow, #ffe600);
-  border-color: var(--nb-ink, #0a0a0a);
-  box-shadow: var(--nb-shadow-sm, 3px 3px 0 #0a0a0a);
+  border-color: var(--nb-on-accent-pop, #0a0a0a);
+  box-shadow: 3px 3px 0 var(--nb-on-accent-pop, #0a0a0a);
+  color: var(--primary-foreground, #0a0a0a);
+}
+
+.pd-sidebar-brand:hover .pd-sidebar-wordmark {
+  color: inherit;
 }
 
 .pd-sidebar-brand:focus-visible {
@@ -132,7 +137,7 @@
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1.05;
-  color: var(--nb-ink, #0a0a0a);
+  color: var(--foreground, var(--pd-on-surface, #0a0a0a));
   max-width: 100%;
   text-align: center;
   overflow-wrap: anywhere;
@@ -200,7 +205,7 @@
 
 /* Lighter lift inside the rail so shadows don’t read as “into” the divider. */
 .pd-sidebar-layout aside[data-sidebar] nav a[aria-current="page"] {
-  box-shadow: 2px 2px 0 var(--nb-ink, #0a0a0a);
+  box-shadow: 2px 2px 0 var(--nb-on-accent-pop, #0a0a0a);
 }
 
 .pd-sidebar-layout aside[data-sidebar] footer {

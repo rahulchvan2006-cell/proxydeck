@@ -27,6 +27,8 @@
   --nb-shadow-sm: var(--nb-raise);
   --nb-shadow-pressed: 2px 2px 0 var(--nb-ink);
   --nb-border-w: 3px;
+  /* Text on bright accents (yellow header row, lime badges) — stays black in both themes. */
+  --nb-on-accent-pop: #0a0a0a;
 
   --background: var(--nb-paper);
   --foreground: var(--nb-ink);
@@ -181,9 +183,10 @@ h6 {
 }
 
 .pd-auth-shell a[href]:not(.button):hover {
+  color: var(--primary-foreground);
   text-decoration: none;
   background-color: var(--nb-lime);
-  box-shadow: 2px 2px 0 var(--nb-ink);
+  box-shadow: 2px 2px 0 var(--nb-on-accent-pop);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   padding: 0.08em 0.2em;
@@ -213,15 +216,15 @@ h6 {
 .pd-sidebar-layout aside[data-sidebar] nav a:hover,
 .pd-sidebar-layout aside[data-sidebar] nav summary:hover {
   background-color: var(--nb-lime);
-  color: var(--nb-ink);
+  color: var(--primary-foreground);
 }
 
 /* Raised item; shadow strength tuned in LayoutOat so it doesn’t crowd the rail edge. */
 .pd-sidebar-layout aside[data-sidebar] nav a[aria-current="page"] {
   background-color: var(--nb-yellow);
-  color: var(--nb-ink);
+  color: var(--primary-foreground);
   font-weight: 800;
-  border-color: var(--nb-ink);
+  border-color: var(--nb-on-accent-pop);
   outline: none;
 }
 
@@ -252,10 +255,10 @@ h6 {
 }
 
 .pd-oat-main-inner a[href]:not(.button):not(.unstyled):not(.card):not(.pd-breadcrumbs__link):hover {
-  color: var(--nb-ink);
+  color: var(--primary-foreground);
   text-decoration: none;
   background-color: var(--nb-lime);
-  box-shadow: 2px 2px 0 var(--nb-ink);
+  box-shadow: 2px 2px 0 var(--nb-on-accent-pop);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   padding: 0.08em 0.2em;
@@ -303,8 +306,13 @@ a.card.pd-action-card {
 
 a.card.pd-action-card:hover {
   background-color: var(--nb-lime);
+  color: var(--primary-foreground);
   transform: translate(-2px, -2px);
-  box-shadow: calc(var(--nb-shadow-x) + 2px) calc(var(--nb-shadow-y) + 2px) 0 var(--nb-ink);
+  box-shadow: calc(var(--nb-shadow-x) + 2px) calc(var(--nb-shadow-y) + 2px) 0 var(--nb-on-accent-pop);
+}
+
+a.card.pd-action-card:hover .text-light {
+  color: color-mix(in srgb, var(--primary-foreground) 68%, transparent);
 }
 
 a.card.pd-action-card:active {
@@ -324,7 +332,7 @@ a.card.pd-action-card h3 {
   font-family: var(--font-display);
   letter-spacing: -0.03em;
   line-height: 1.2;
-  color: var(--nb-ink);
+  color: var(--foreground);
 }
 
 a.card.pd-action-card p {
@@ -342,8 +350,8 @@ a.card.pd-action-card p {
     [data-variant="danger"]
   ) {
   background: var(--nb-yellow);
-  color: var(--nb-ink);
-  border: var(--nb-border-w) solid var(--nb-ink);
+  color: var(--primary-foreground);
+  border: var(--nb-border-w) solid var(--nb-on-accent-pop);
   border-radius: var(--radius-medium);
   box-shadow: var(--nb-shadow-sm);
   font-weight: 700;
@@ -353,6 +361,8 @@ a.card.pd-action-card p {
     [data-variant="danger"]
   ):hover:not(:disabled) {
   background: var(--nb-lime);
+  color: var(--primary-foreground);
+  border-color: var(--nb-on-accent-pop);
   filter: none;
 }
 
@@ -364,8 +374,8 @@ a.card.pd-action-card p {
 }
 
 :is(button, [type="submit"], [type="reset"], [type="button"], a.button).outline:not([data-variant="danger"]) {
-  border: var(--nb-border-w) solid var(--nb-ink);
-  color: var(--nb-ink);
+  border: var(--nb-border-w) solid var(--border);
+  color: var(--foreground);
   background-color: var(--card);
   box-shadow: var(--nb-shadow-sm);
   font-weight: 700;
@@ -373,7 +383,8 @@ a.card.pd-action-card p {
 
 :is(button, [type="submit"], [type="reset"], [type="button"], a.button).outline:not([data-variant="danger"]):hover:not(:disabled) {
   background-color: var(--nb-cyan);
-  color: var(--nb-ink);
+  color: var(--primary-foreground);
+  border-color: var(--nb-on-accent-pop);
 }
 
 :is(button, [type="submit"], [type="reset"], [type="button"], a.button).outline:not([data-variant="danger"]):active:not(:disabled) {
@@ -401,7 +412,7 @@ a.card.pd-action-card p {
 :is(button, [type="submit"], [type="reset"], [type="button"], a.button)[data-variant="danger"] {
   background: var(--danger);
   color: var(--danger-foreground);
-  border: var(--nb-border-w) solid var(--nb-ink);
+  border: var(--nb-border-w) solid var(--nb-on-accent-pop);
   box-shadow: var(--nb-shadow-sm);
   font-weight: 700;
 }
@@ -432,12 +443,12 @@ a.card.pd-action-card p {
 }
 
 .badge.pd-signal-active {
-  color: var(--nb-ink);
+  color: var(--nb-on-accent-pop);
   background-color: var(--nb-lime);
 }
 
 .badge.pd-signal-warning {
-  color: var(--nb-ink);
+  color: var(--nb-on-accent-pop);
   background-color: var(--warning);
 }
 
@@ -505,10 +516,10 @@ pre.pd-code-block code {
   font-size: var(--text-7);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--nb-ink);
+  color: var(--nb-on-accent-pop);
   background-color: var(--nb-yellow);
   border: none;
-  border-bottom: var(--nb-border-w) solid var(--nb-ink);
+  border-bottom: var(--nb-border-w) solid var(--nb-on-accent-pop);
 }
 
 .pd-table-gridless tbody tr {
@@ -638,12 +649,12 @@ pre.pd-code-block code {
 
 [role="alert"][data-variant="success"] {
   background-color: color-mix(in srgb, var(--success) 22%, var(--card));
-  color: var(--nb-ink);
+  color: var(--foreground);
 }
 
 [role="alert"][data-variant="danger"] {
   background-color: color-mix(in srgb, var(--danger) 18%, var(--card));
-  color: var(--nb-ink);
+  color: var(--foreground);
 }
 
 .pd-app-root {
@@ -696,6 +707,7 @@ pre.pd-code-block code {
 
 [data-sidebar-toggle]:hover {
   background-color: var(--nb-yellow);
+  color: var(--primary-foreground);
 }
 
 [data-sidebar-toggle]:active {
