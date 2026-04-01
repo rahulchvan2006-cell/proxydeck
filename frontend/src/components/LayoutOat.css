@@ -140,13 +140,15 @@
   text-transform: uppercase;
 }
 
-/* Nav: gutter before the ink divider so raised items don’t touch it; align groups vertically. */
+/*
+ * Nav fills space between header and footer so the version + actions stay
+ * pinned to the bottom of the sidebar (scroll inside nav when needed).
+ */
 .pd-sidebar-layout aside[data-sidebar] > nav {
-  flex: 0 1 auto;
+  flex: 1 1 0;
   min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  max-height: calc(100dvh - 11rem);
   padding-inline: var(--space-3);
   padding-inline-end: var(--space-4);
   padding-block: var(--space-2);
@@ -206,9 +208,11 @@
   flex-direction: column;
   gap: var(--space-2);
   flex-shrink: 0;
-  margin-block-start: var(--space-4);
+  margin-block-start: 0;
   padding-inline: var(--space-3);
+  padding-block-start: var(--space-4);
   padding-block-end: var(--space-3);
+  border-block-start: 2px dashed color-mix(in srgb, var(--nb-ink, #0a0a0a) 22%, transparent);
 }
 
 .pd-sidebar-layout aside[data-sidebar] footer .pd-sidebar-version {

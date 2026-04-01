@@ -9,29 +9,21 @@
 
 ### UI look & feel
 
-<table width="100%">
-  <tr>
-    <td align="center">
-      <img src="assets/1.png" alt="Domain portfolio" width="88%" />
-      <br />
-      <small>Domain portfolio</small>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="assets/2.png" alt="Proxy sites" width="88%" />
-      <br />
-      <small>Proxy sites</small>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="assets/3.png" alt="Server inventory" width="88%" />
-      <br />
-      <small>Proxy Config</small>
-    </td>
-  </tr>
-</table>
+#### Domain portfolio & detail
+
+<p align="center">
+  <img src="assets/DomainPage.png" alt="Single domain : WHOIS, DNS, TLS, enrichment, and timeline" width="88%" />
+</p>
+
+<p align="center">
+  <img src="assets/DomainPortfolioPage.png" alt="Domain portfolio table and empty state" width="88%" />
+</p>
+
+#### Server inventory
+
+<p align="center">
+  <img src="assets/ServerPage.png" alt="Server inventory — list, roles, and connectivity" width="88%" />
+</p>
 
 ### Acknowledgments
 
@@ -39,9 +31,7 @@ Libraries, tools, and inspirations: see **[THANKS.md](THANKS.md)**.
 
 ---
 
-
 ### Setup
-
 
 ```bash
 cp .env.sample .env   # BETTER_AUTH_SECRET, DATABASE_URL
